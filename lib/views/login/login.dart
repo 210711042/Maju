@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
+  static route() => MaterialPageRoute(builder: (context) => const LoginView());
+
   @override
   State<LoginView> createState() => _LoginViewState();
 }
@@ -10,6 +12,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Text("Halo"),
+    );
   }
 }
