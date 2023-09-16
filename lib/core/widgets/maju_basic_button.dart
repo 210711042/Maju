@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maju/themes/palette.dart';
 
 class MajuBasicButton extends StatelessWidget {
   const MajuBasicButton({
@@ -26,7 +27,15 @@ class MajuBasicButton extends StatelessWidget {
       width: btnWidth,
       height: btnHeight,
       child: ElevatedButton(
-        style: style ?? ElevatedButton.styleFrom(),
+        style: style ??
+            ElevatedButton.styleFrom(
+                backgroundColor: Palette.n900,
+                foregroundColor: Palette.n50,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                textStyle:
+                    TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         onPressed: onPressed,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

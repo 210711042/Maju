@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
-
 import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/themes/palette.dart';
-import 'package:maju/views/home/home.dart';
-import 'package:maju/views/login/register.dart';
+import 'package:maju/views/login/login.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
-  static route() => MaterialPageRoute(builder: (context) => const LoginView());
+  static route() =>
+      MaterialPageRoute(builder: (context) => const RegisterView());
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 100),
+          padding: const EdgeInsets.only(top: 100.0, right: 16.0, left: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Welcome to Maju",
+                "Create your account",
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                     fontSize: 36.0,
                     color: Palette.n900,
@@ -43,12 +42,7 @@ class _LoginViewState extends State<LoginView> {
               SizedBox(
                 height: 40,
               ),
-              MajuBasicButton(
-                textButton: "Sign in",
-                onPressed: () {
-                  Navigator.of(context).push(HomeView.route());
-                },
-              ),
+              MajuBasicButton(textButton: "Sign up", onPressed: () {})
             ],
           ),
         ),
@@ -57,21 +51,21 @@ class _LoginViewState extends State<LoginView> {
           padding: const EdgeInsets.only(bottom: 32.0),
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).push(RegisterView.route());
+              Navigator.of(context).push(LoginView.route());
             },
             child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Don't have any account? ",
+                      text: "Already have an account? ",
                       style: Theme.of(context)
                           .textTheme
                           .titleSmall!
                           .copyWith(color: Palette.n400),
                     ),
                     TextSpan(
-                      text: "Sign up",
+                      text: "Sign in",
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: Palette.n900,
                           decoration: TextDecoration.underline),
