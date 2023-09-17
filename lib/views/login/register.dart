@@ -14,6 +14,9 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  bool _isSecurePassword = true;
+  bool _isSecurePassword2 = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +44,73 @@ class _RegisterViewState extends State<RegisterView> {
                       .copyWith(fontSize: 12.0, fontWeight: FontWeight.normal)),
               SizedBox(
                 height: 40,
+              ),
+              TextFormField(
+                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0))),
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Username tidak boleh kosong';
+                //   }
+                //   return null;
+                // },
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                obscureText: _isSecurePassword,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  suffixIcon: togglePassword(),
+                ),
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Password tidak boleh kosong';
+                //   }
+                //   return null;
+                // },
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                obscureText: _isSecurePassword2,
+                decoration: InputDecoration(
+                    labelText: 'Re-Enter Password',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isSecurePassword2 = !_isSecurePassword2;
+                        });
+                      },
+                      icon: _isSecurePassword2
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                      color: Colors.grey,
+                    )),
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Password tidak boleh kosong';
+                //   }
+                //   return null;
+                // },
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              // ----- DATE PICKER HERE -----
+              SizedBox(
+                height: 24,
               ),
               MajuBasicButton(textButton: "Sign up", onPressed: () {})
             ],
@@ -73,6 +143,20 @@ class _RegisterViewState extends State<RegisterView> {
                   ],
                 )),
           )),
+    );
+  }
+
+  Widget togglePassword() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          _isSecurePassword = !_isSecurePassword;
+        });
+      },
+      icon: _isSecurePassword
+          ? Icon(Icons.visibility)
+          : Icon(Icons.visibility_off),
+      color: Colors.grey,
     );
   }
 }

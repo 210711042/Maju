@@ -15,6 +15,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  bool _isSecurePassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +44,41 @@ class _LoginViewState extends State<LoginView> {
                       .copyWith(fontSize: 12.0, fontWeight: FontWeight.normal)),
               SizedBox(
                 height: 40,
+              ),
+              TextFormField(
+                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0))),
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Username tidak boleh kosong';
+                //   }
+                //   return null;
+                // },
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                obscureText: _isSecurePassword,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  suffixIcon: togglePassword(),
+                ),
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Password tidak boleh kosong';
+                //   }
+                //   return null;
+                // },
+              ),
+              SizedBox(
+                height: 24,
               ),
               MajuBasicButton(
                 textButton: "Sign in",
@@ -79,6 +116,20 @@ class _LoginViewState extends State<LoginView> {
                   ],
                 )),
           )),
+    );
+  }
+
+  Widget togglePassword() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          _isSecurePassword = !_isSecurePassword;
+        });
+      },
+      icon: _isSecurePassword
+          ? Icon(Icons.visibility)
+          : Icon(Icons.visibility_off),
+      color: Colors.grey,
     );
   }
 }

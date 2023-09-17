@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:maju/themes/palette.dart';
 
-class MajuBasicProduct extends StatelessWidget {
+class MajuBasicProduct extends StatefulWidget {
   final String image;
   final String title;
   final String price;
@@ -10,6 +10,7 @@ class MajuBasicProduct extends StatelessWidget {
   final String rating;
   final String sold;
   final bool isCashback;
+  final double width;
 
   MajuBasicProduct({
     required this.image,
@@ -19,8 +20,14 @@ class MajuBasicProduct extends StatelessWidget {
     required this.rating,
     required this.sold,
     this.isCashback = false,
+    this.width = 142.0,
   });
 
+  @override
+  _MajuBasicProductState createState() => _MajuBasicProductState();
+}
+
+class _MajuBasicProductState extends State<MajuBasicProduct> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -28,15 +35,15 @@ class MajuBasicProduct extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
           child: Container(
-            width: 142.0,
+            width: widget.width,
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(width: 0.5, color: Palette.n200),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.5), // Opacity of 5%
-                  offset: Offset(0, 4), // Y offset of 4
-                  blurRadius: 20, // Blur radius of 20
+                  color: Colors.black.withOpacity(0.5),
+                  offset: const Offset(0, 4),
+                  blurRadius: 20,
                 ),
               ],
             ),
@@ -47,27 +54,29 @@ class MajuBasicProduct extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: Image.asset(
-                        "assets/images/products/$image",
+                        "assets/images/products/${widget.image}",
                         fit: BoxFit.fitWidth,
                       ),
                     ),
-                    if (isCashback)
+                    if (widget.isCashback)
                       Positioned(
-                          bottom: 4.0,
-                          left: 4.0,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: Container(
-                                color: Palette.g600,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 2.0, horizontal: 4.0),
-                                  child: Text(
-                                    "Cashback 2%",
-                                    style: TextStyle(color: Palette.g100),
-                                  ),
-                                )),
-                          ))
+                        bottom: 4.0,
+                        left: 4.0,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Container(
+                            color: Palette.g600,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 2.0, horizontal: 4.0),
+                              child: Text(
+                                "Cashback 2%",
+                                style: TextStyle(color: Palette.g100),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
                 Padding(
@@ -77,7 +86,7 @@ class MajuBasicProduct extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _truncateTitle(title),
+                        _truncateTitle(widget.title),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
@@ -90,7 +99,7 @@ class MajuBasicProduct extends StatelessWidget {
                         height: 4,
                       ),
                       Text(
-                        "Rp$price",
+                        "Rp${widget.price}",
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               fontSize: 14.0,
                               color: Palette.n900,
@@ -107,7 +116,7 @@ class MajuBasicProduct extends StatelessWidget {
                             width: 4,
                           ),
                           Text(
-                            location,
+                            widget.location,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -129,7 +138,7 @@ class MajuBasicProduct extends StatelessWidget {
                             width: 4,
                           ),
                           Text(
-                            "$rating | $sold terjual",
+                            "${widget.rating} | ${widget.sold} terjual",
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
