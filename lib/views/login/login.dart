@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
@@ -16,6 +16,17 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   bool _isSecurePassword = true;
+
+  void onLoginTaped(){
+    Fluttertoast.showToast(
+      msg: "Selamat Data di MarketMaju!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      backgroundColor: Color.fromARGB(255, 91, 202, 95),
+      textColor: Colors.white,
+      fontSize: 19.0,
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +95,7 @@ class _LoginViewState extends State<LoginView> {
                 textButton: "Sign in",
                 onPressed: () {
                   Navigator.of(context).push(HomeView.route());
+                  onLoginTaped();
                 },
               ),
             ],
