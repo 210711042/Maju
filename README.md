@@ -1,6 +1,6 @@
 # Final Project PBP - E Commerce
 
-Aplikasi e commerce sederhana, dll.................
+Aplikasi E-commerce Maju (Marketmaju) berbentuk market place yang dapat membantu dalam penjualan barang seperti Tas, Meja, Mobil dan lain sebagainya dengan ruang lingkup Nasional
 
 ## Contributing
 
