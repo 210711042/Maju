@@ -17,6 +17,34 @@ class _RegisterViewState extends State<RegisterView> {
   bool _isSecurePassword = true;
   bool _isSecurePassword2 = true;
 
+   _showAlertDialog(BuildContext context) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text('Perhatian!'),
+      content: Text('Sudah Yakin Dengan Datamu?'),
+      actions: <Widget>[
+        TextButton(
+          child: Text('OK'),
+          onPressed: () {
+            Navigator.of(context).push(LoginView.route());
+          },
+        ),
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +150,10 @@ class _RegisterViewState extends State<RegisterView> {
               SizedBox(
                 height: 24,
               ),
-              MajuBasicButton(textButton: "Sign up", onPressed: () {})
+              MajuBasicButton(textButton: "Sign up", 
+              onPressed: () {
+                _showAlertDialog(context);
+              })
             ],
           ),
         ),

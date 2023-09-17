@@ -131,6 +131,15 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
+//   Widget AlertDialog(){
+//     @override
+//     Widget build(BuildContext context){
+//       return Center(
+//         child: ,
+//       )
+//     }
+//  }
+
   Widget togglePassword() {
     return IconButton(
       onPressed: () {
