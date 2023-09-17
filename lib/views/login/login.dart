@@ -46,23 +46,23 @@ class _LoginViewState extends State<LoginView> {
                 height: 40,
               ),
               TextFormField(
-                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0))),
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return 'Username tidak boleh kosong';
-                //   }
-                //   return null;
-                // },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Username tidak boleh kosong';
+                  }
+                  return null;
+                },
               ),
               SizedBox(
                 height: 16,
               ),
               TextFormField(
-                // autovalidateMode: AutovalidateMode.onUserInteraction,
+                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 obscureText: _isSecurePassword,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -70,12 +70,12 @@ class _LoginViewState extends State<LoginView> {
                       borderRadius: BorderRadius.circular(8.0)),
                   suffixIcon: togglePassword(),
                 ),
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return 'Password tidak boleh kosong';
-                //   }
-                //   return null;
-                // },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password tidak boleh kosong';
+                  }
+                  return null;
+                },
               ),
               SizedBox(
                 height: 24,
