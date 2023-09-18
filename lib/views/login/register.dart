@@ -17,6 +17,32 @@ class _RegisterViewState extends State<RegisterView> {
   bool _isSecurePassword = true;
   bool _isSecurePassword2 = true;
 
+  DateTime? _selectedDate;
+  String _date = '';
+
+  void _showDatePicker() async{
+    DateTime? pickedDate = await showDatePicker(
+      context: context, 
+      initialDate: DateTime(2000), 
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.dark(),
+          child: child!,
+        );
+      },
+    );
+
+    if(pickedDate != null){
+      // String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+      setState(() {
+        _selectedDate = pickedDate;
+        _date = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+      });
+    }
+  }
+
    _showAlertDialog(BuildContext context) {
     AlertDialog alertDialog = AlertDialog(
       title: Text('Perhatian!'),
@@ -147,6 +173,22 @@ class _RegisterViewState extends State<RegisterView> {
                 height: 16,
               ),
               // ----- DATE PICKER HERE -----
+              GestureDetector(
+                onTap: _showDatePicker,
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: 'Select Date',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: Text(
+                    _selectedDate == null ? 'Select a date' : _date,
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ),
+              ),
+
               SizedBox(
                 height: 24,
               ),
