@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
+import 'package:maju/views/seller/inputForm.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -67,7 +68,20 @@ class _ProfileViewState extends State<ProfileView> {
           body: TabBarView(
             children: <Widget>[
               Center(
-                child: Text("Abraham Jonathan Hortalanus"),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const InputProduct(
+                                id: null,
+                                productName: null,
+                                stock: null,
+                                price: null,
+                                image: null)));
+                  },
+                  child: Text("Abraham Jonathan Hortalanus"),
+                ),
               ),
               Center(
                 child: Text("Nicodemus Anggit Krisnuaji"),

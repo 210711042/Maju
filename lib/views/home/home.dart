@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:maju/core/widgets/maju_basic_product.dart';
 import 'package:maju/core/widgets/maju_basic_shop.dart';
+import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,6 +20,22 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  List<Map<String, dynamic>> products = [];
+
+  void refresh() async {
+    final data = await SQLHelper.getProducts();
+    setState(() {
+      products = data;
+    });
+    print(products);
+  }
+
+  @override
+  void initState() {
+    refresh();
+    super.initState();
+  }
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -174,6 +191,19 @@ class _HomeViewState extends State<HomeView> {
                         MajuBasicShopCard(),
                       ],
                     )),
+                const SizedBox(
+                  height: 24,
+                ),
+                Text(
+                  "Sample Product",
+                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                      fontSize: 18.0,
+                      color: Palette.n900,
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(
+                  height: 16.0,
+                ),
                 const SizedBox(
                   height: 24,
                 ),
