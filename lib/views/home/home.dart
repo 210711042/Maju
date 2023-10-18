@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:maju/core/widgets/maju_basic_product.dart';
 import 'package:maju/core/widgets/maju_basic_shop.dart';
+import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
 import 'package:maju/views/login/login.dart';
+import 'package:maju/views/product/productDetail.dart';
+import 'package:maju/views/product/products.dart';
 import 'package:maju/views/profile/profile.dart';
+import 'package:flutter/src/rendering/box.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -19,6 +24,22 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  List<Map<String, dynamic>> products = [];
+
+  void refresh() async {
+    final data = await SQLHelper.getProducts();
+    setState(() {
+      products = data;
+    });
+    print(products);
+  }
+
+  @override
+  void initState() {
+    refresh();
+    super.initState();
+  }
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -32,6 +53,9 @@ class _HomeViewState extends State<HomeView> {
           MaterialPageRoute(builder: (context) => HomeView()),
         );
         break;
+      case 1:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: ((context) => ProductsView())));
       case 2:
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => ProfileView()),
@@ -174,6 +198,56 @@ class _HomeViewState extends State<HomeView> {
                         MajuBasicShopCard(),
                       ],
                     )),
+                const SizedBox(
+                  height: 24,
+                ),
+                Text(
+                  "Sample Product",
+                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                      fontSize: 18.0,
+                      color: Palette.n900,
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(
+                  height: 16.0,
+                ),
+                GridView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    mainAxisExtent: 252,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (_, index) {
+                    return GestureDetector(
+                        onTap: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProductDetail(
+                                      id: products[index]['id'],
+                                      productName: products[index]
+                                          ['product_name'],
+                                      price: products[index]['price'],
+                                      stock: products[index]['stock'],
+                                      image: products[index]['image'])));
+                        },
+                        child: Container(
+                          color: Palette.b100,
+                          child: MajuGridProduct(
+                            image: "product_3.png",
+                            title: products[index]['product_name'],
+                            price: "179.900",
+                            location: "Semarang",
+                            rating: "4.7",
+                            sold: "200+",
+                          ),
+                        ));
+                  },
+                ),
                 const SizedBox(
                   height: 24,
                 ),

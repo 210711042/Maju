@@ -13,6 +13,8 @@ dependencies:
   flutter_svg: ^2.0.7
   carousel_slider: ^4.2.1
   http: ^1.1.0
+  sqflite: ^2.2.6
+  flutter_slidable: ^0.6.0
 
 dev_dependencies:
   flutter_test:
