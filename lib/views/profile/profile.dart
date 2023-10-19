@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
+import 'package:maju/views/product/products.dart';
 import 'package:maju/views/seller/inputForm.dart';
 
 class ProfileView extends StatefulWidget {
@@ -24,6 +25,9 @@ class _ProfileViewState extends State<ProfileView> {
           MaterialPageRoute(builder: (context) => HomeView()),
         );
         break;
+      case 1:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => ProductsView()));
       case 2:
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => ProfileView()),
@@ -40,62 +44,14 @@ class _ProfileViewState extends State<ProfileView> {
         child: Scaffold(
           appBar: AppBar(
             title: Text("Profile"),
-            bottom: TabBar(
-              tabs: <Widget>[
-                Tab(
-                  text: "11042",
-                  icon: Icon(Icons.person),
-                ),
-                Tab(
-                  text: "11127",
-                  icon: Icon(Icons.person),
-                ),
-                Tab(
-                  text: "11133",
-                  icon: Icon(Icons.person),
-                ),
-                Tab(
-                  text: "11134",
-                  icon: Icon(Icons.person),
-                ),
-                Tab(
-                  text: "11355",
-                  icon: Icon(Icons.person),
-                ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Text("Kerjakan profile disini yeah"),
               ],
             ),
-          ),
-          body: TabBarView(
-            children: <Widget>[
-              Center(
-                child: GestureDetector(
-                  onTap: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const InputProduct(
-                                id: null,
-                                productName: null,
-                                stock: null,
-                                price: null,
-                                image: null)));
-                  },
-                  child: Text("Abraham Jonathan Hortalanus"),
-                ),
-              ),
-              Center(
-                child: Text("Nicodemus Anggit Krisnuaji"),
-              ),
-              Center(
-                child: Text("Natasya Irwanto"),
-              ),
-              Center(
-                child: Text("Natalia Oktaviani Herindra Putri"),
-              ),
-              Center(
-                child: Text("Gratia Lishe Emerald Sagay"),
-              ),
-            ],
           ),
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[

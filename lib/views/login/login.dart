@@ -13,7 +13,8 @@ class LoginView extends StatefulWidget {
 
   const LoginView({Key? key});
 
-  static Route<dynamic> route() => MaterialPageRoute(builder: (context) => const LoginView());
+  static Route<dynamic> route() =>
+      MaterialPageRoute(builder: (context) => const LoginView());
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -25,25 +26,21 @@ class _LoginViewState extends State<LoginView> {
 
   bool _isSecurePassword = true;
 
-  String _email = ''; // Deklarasikan email sebagai instance variable
-  String _password = ''; // Deklarasikan password sebagai instance variable
+  // String _email = '';
+  // String _password = '';
 
-  void onLoginTaped() async{
-
-    _email = _emailController.text;
-    _password = _passwordController.text;
-
-    // Memeriksa autentikasi dengan SQLHelper
-    final isAuthenticated = await SQLHelper.login(_email, _password);
+  void onLoginTaped() async {
+    final isAuthenticated =
+        await SQLHelper.login(_emailController.text, _passwordController.text);
 
     if (isAuthenticated) {
       Fluttertoast.showToast(
-      msg: "Selamat Data di MarketMaju!",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.TOP,
-      backgroundColor: Color.fromARGB(255, 91, 202, 95),
-      textColor: Colors.white,
-      fontSize: 19.0,
+        msg: "Selamat Data di MarketMaju!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Color.fromARGB(255, 91, 202, 95),
+        textColor: Colors.white,
+        fontSize: 19.0,
       );
       // Autentikasi berhasil, arahkan ke halaman beranda atau tindakan selanjutnya
       Navigator.of(context).push(HomeView.route());

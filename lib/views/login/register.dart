@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
+import 'package:maju/data/entity/users.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/login/login.dart';
 import 'package:maju/data/sql_helper.dart';
 
-
 class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key}) : super(key: key);
+  const RegisterView(
+      {super.key,
+      this.id,
+      this.email,
+      this.username,
+      this.password,
+      this.phone,
+      this.address});
+
+  final String? email, username, password, phone, address;
+  final int? id;
 
   static Route<dynamic> route() =>
       MaterialPageRoute(builder: (context) => const RegisterView());
@@ -19,62 +29,38 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   bool _isSecurePassword = true;
   bool _isSecurePassword2 = true;
+  bool isEmailUsed = false;
 
-  DateTime? _selectedDate;
-  String _date = '';
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController reEnterPasswordController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _reEnterPasswordController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-
-  // void _showDatePicker() async {
-  //   DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime(2000),
-  //     firstDate: DateTime(2000),
-  //     lastDate: DateTime(2100),
-  //     builder: (BuildContext context, Widget? child) {
-  //       return Theme(
-  //         data: ThemeData.dark(),
-  //         child: child!,
-  //       );
-  //     },
-  //   );
-
-  //   if (pickedDate != null) {
-  //     setState(() {
-  //       _selectedDate = pickedDate;
-  //       _date = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-  //     });
-  //   }
-  // }
-
-  void _showAlertDialog(BuildContext context) {
+  void showAlertDialog(BuildContext context) {
     AlertDialog alertDialog = AlertDialog(
       title: Text('Perhatian!'),
       content: Text('Sudah Yakin Dengan Datamu?'),
       actions: <Widget>[
         TextButton(
           child: Text('OK'),
-          onPressed: () async{
-            // Tambahkan pengguna baru ke database
-            await SQLHelper.addUser(_emailController.text, _passwordController.text, _usernameController.text, _phoneNumberController.text, _addressController.text );
-          Fluttertoast.showToast(
-            msg: "Berhasil Melakukan Registrasi!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.TOP,
-            backgroundColor: Color.fromARGB(255, 91, 202, 95),
-            textColor: Colors.white,
-            fontSize: 19.0,
-          );
+          onPressed: () async {
+            await addUser();
+
+            Fluttertoast.showToast(
+              msg: "Berhasil Melakukan Registrasi!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              backgroundColor: Color.fromARGB(255, 91, 202, 95),
+              textColor: Colors.white,
+              fontSize: 19.0,
+            );
             Navigator.of(context).push(LoginView.route());
           },
         ),
         TextButton(
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -90,14 +76,10 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  // bool _isEmailAlreadyUsed(String email) {
-  //   final usedEmails = ['user1@example.com', 'user2@example.com'];
-  //   return usedEmails.contains(email);
-  // }
-    Future<bool> _isEmailAlreadyUsed(String email) async {
-      final List<User> users = await SQLHelper.getUsers();
-      return users.any((user) => user.email == email);
-   }
+  Future<bool> isEmailAlreadyUsed(String email) async {
+    final users = await SQLHelper.getUsers();
+    return users.any((user) => user['email'] == email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,28 +89,30 @@ class _RegisterViewState extends State<RegisterView> {
           padding: const EdgeInsets.only(top: 100.0, right: 16.0, left: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               Text(
                 "Create your account",
-                style: Theme.of(context).textTheme.headline6!.copyWith(
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                     fontSize: 36.0,
                     color: Palette.n900,
                     fontWeight: FontWeight.w500),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Text(
                 "Lorem ipsum dolor sit amet consectetur. In magnis adipiscing suspendisse risus eget elit dolor.",
-                style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                    fontSize: 12.0, fontWeight: FontWeight.normal),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontSize: 12.0, fontWeight: FontWeight.normal),
               ),
-              SizedBox(
-                height: 40,
+              const SizedBox(
+                height: 32,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: _usernameController,
+                controller: usernameController,
                 decoration: InputDecoration(
                     labelText: 'Username',
                     border: OutlineInputBorder(
@@ -140,12 +124,12 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: _emailController,
+                controller: emailController,
                 decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(
@@ -157,22 +141,19 @@ class _RegisterViewState extends State<RegisterView> {
                   if (!value.contains('@')) {
                     return 'Email harus menggunakan @';
                   }
-                  if (value.contains(value)) {
+                  if (isEmailUsed) {
                     return 'Email sudah digunakan';
                   }
-  //              if (await isEmailAlreadyUsed(value)) {
-  //                return 'Email sudah digunakan';
-  //              } >> harusnya pake ini tapi error? 
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 obscureText: _isSecurePassword,
-                controller: _passwordController,
+                controller: passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
@@ -190,13 +171,13 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 obscureText: _isSecurePassword2,
-                controller: _reEnterPasswordController,
+                controller: reEnterPasswordController,
                 decoration: InputDecoration(
                   labelText: 'Re-Enter Password',
                   border: OutlineInputBorder(
@@ -209,8 +190,8 @@ class _RegisterViewState extends State<RegisterView> {
                       });
                     },
                     icon: _isSecurePassword2
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
                     color: Colors.grey,
                   ),
                 ),
@@ -218,7 +199,7 @@ class _RegisterViewState extends State<RegisterView> {
                   if (value == null || value.isEmpty) {
                     return 'Password tidak boleh kosong';
                   }
-                  if (value != _passwordController.text) {
+                  if (value != passwordController.text) {
                     return 'Password tidak cocok';
                   }
                   if (value.length < 5) {
@@ -227,12 +208,12 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: _phoneNumberController,
+                controller: phoneNumberController,
                 decoration: InputDecoration(
                     labelText: 'No.Telepon',
                     border: OutlineInputBorder(
@@ -247,12 +228,12 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: _addressController,
+                controller: addressController,
                 decoration: InputDecoration(
                     labelText: 'Alamat',
                     border: OutlineInputBorder(
@@ -267,34 +248,19 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              // SizedBox(
-              //   height: 16,
-              // ),
-              // GestureDetector(
-              //   onTap: _showDatePicker,
-              //   child: InputDecorator(
-              //     decoration: InputDecoration(
-              //       labelText: 'Select Date',
-              //       border: OutlineInputBorder(
-              //         borderRadius: BorderRadius.circular(8.0),
-              //       ),
-              //     ),
-              //     child: Text(
-              //       _selectedDate == null ? 'Select a date' : _date,
-              //       style: TextStyle(fontSize: 16.0),
-              //     ),
-              //   ),
-              // ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
               MajuBasicButton(
                 textButton: "Sign up",
-                onPressed: () {
-                  if (_validateForm()) {
-                    _showAlertDialog(context);
+                onPressed: () async {
+                  isEmailUsed = await isEmailAlreadyUsed(emailController.text);
+
+                  setState(() {});
+
+                  if (validateForm() && !isEmailUsed) {
+                    showAlertDialog(context);
                   }
-                
                 },
               ),
             ],
@@ -315,13 +281,14 @@ class _RegisterViewState extends State<RegisterView> {
                   text: "Already have an account? ",
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle2!
+                      .titleSmall!
                       .copyWith(color: Palette.n400),
                 ),
                 TextSpan(
                   text: "Sign in",
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                      color: Palette.n900, decoration: TextDecoration.underline),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Palette.n900,
+                      decoration: TextDecoration.underline),
                 ),
               ],
             ),
@@ -339,21 +306,30 @@ class _RegisterViewState extends State<RegisterView> {
         });
       },
       icon: _isSecurePassword
-          ? Icon(Icons.visibility)
-          : Icon(Icons.visibility_off),
+          ? const Icon(Icons.visibility)
+          : const Icon(Icons.visibility_off),
       color: Colors.grey,
     );
   }
 
-  bool _validateForm() {
-    if (_emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty &&
-        _reEnterPasswordController.text.isNotEmpty &&
-        _usernameController.text.isNotEmpty &&
-        _phoneNumberController.text.isNotEmpty &&
-        _addressController.text.isNotEmpty) {
+  bool validateForm() {
+    if (emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty &&
+        reEnterPasswordController.text.isNotEmpty &&
+        usernameController.text.isNotEmpty &&
+        phoneNumberController.text.isNotEmpty &&
+        addressController.text.isNotEmpty) {
       return true;
     }
     return false;
+  }
+
+  Future<void> addUser() async {
+    await SQLHelper.addUser(
+        emailController.text,
+        passwordController.text,
+        usernameController.text,
+        phoneNumberController.text,
+        addressController.text);
   }
 }
