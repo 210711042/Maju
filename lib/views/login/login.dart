@@ -4,21 +4,40 @@ import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
 import 'package:maju/views/login/register.dart';
+import 'package:maju/data/sql_helper.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  // const LoginView({super.key});
 
-  static route() => MaterialPageRoute(builder: (context) => const LoginView());
+  // static route() => MaterialPageRoute(builder: (context) => const LoginView());
+
+  const LoginView({Key? key});
+
+  static Route<dynamic> route() => MaterialPageRoute(builder: (context) => const LoginView());
 
   @override
   State<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   bool _isSecurePassword = true;
 
-  void onLoginTaped(){
-    Fluttertoast.showToast(
+  String _email = ''; // Deklarasikan email sebagai instance variable
+  String _password = ''; // Deklarasikan password sebagai instance variable
+
+  void onLoginTaped() async{
+
+    _email = _emailController.text;
+    _password = _passwordController.text;
+
+    // Memeriksa autentikasi dengan SQLHelper
+    final isAuthenticated = await SQLHelper.login(_email, _password);
+
+    if (isAuthenticated) {
+      Fluttertoast.showToast(
       msg: "Selamat Data di MarketMaju!",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.TOP,
@@ -26,6 +45,19 @@ class _LoginViewState extends State<LoginView> {
       textColor: Colors.white,
       fontSize: 19.0,
       );
+      // Autentikasi berhasil, arahkan ke halaman beranda atau tindakan selanjutnya
+      Navigator.of(context).push(HomeView.route());
+    } else {
+      // Autentikasi gagal, tampilkan pesan kesalahan
+      Fluttertoast.showToast(
+        msg: "Email atau Password salah",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Color.fromARGB(255, 255, 0, 0),
+        textColor: Colors.white,
+        fontSize: 19.0,
+      );
+    }
   }
 
   @override
@@ -57,7 +89,8 @@ class _LoginViewState extends State<LoginView> {
                 height: 40,
               ),
               TextFormField(
-                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                controller: _emailController, // Hubungkan controller
                 decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(
@@ -73,7 +106,8 @@ class _LoginViewState extends State<LoginView> {
                 height: 16,
               ),
               TextFormField(
-                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                controller: _passwordController, // Hubungkan controller
                 obscureText: _isSecurePassword,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -94,7 +128,7 @@ class _LoginViewState extends State<LoginView> {
               MajuBasicButton(
                 textButton: "Sign in",
                 onPressed: () {
-                  Navigator.of(context).push(HomeView.route());
+                  // Navigator.of(context).push(HomeView.route());
                   onLoginTaped();
                 },
               ),
