@@ -163,7 +163,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       MajuBasicProduct(
                         image: "product_3.png",
-                        title: "3 In 1 Kitchen Set lengkap untuk dapur",
+                        title: "3 In 1 Kitchen Set lengkap untuk dapur anda yang bagus",
                         price: "179.900",
                         location: "Semarang",
                         rating: "4.7",

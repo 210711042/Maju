@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/login/login.dart';
+import 'package:maju/data/sql_helper.dart';
+
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -56,7 +59,17 @@ class _RegisterViewState extends State<RegisterView> {
       actions: <Widget>[
         TextButton(
           child: Text('OK'),
-          onPressed: () {
+          onPressed: () async{
+            // Tambahkan pengguna baru ke database
+            await SQLHelper.addUser(_emailController.text, _passwordController.text, _usernameController.text, _phoneNumberController.text, _addressController.text );
+          Fluttertoast.showToast(
+            msg: "Berhasil Melakukan Registrasi!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Color.fromARGB(255, 91, 202, 95),
+            textColor: Colors.white,
+            fontSize: 19.0,
+          );
             Navigator.of(context).push(LoginView.route());
           },
         ),
@@ -77,10 +90,14 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  bool _isEmailAlreadyUsed(String email) {
-    final usedEmails = ['user1@example.com', 'user2@example.com'];
-    return usedEmails.contains(email);
-  }
+  // bool _isEmailAlreadyUsed(String email) {
+  //   final usedEmails = ['user1@example.com', 'user2@example.com'];
+  //   return usedEmails.contains(email);
+  // }
+    Future<bool> _isEmailAlreadyUsed(String email) async {
+      final List<User> users = await SQLHelper.getUsers();
+      return users.any((user) => user.email == email);
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +160,9 @@ class _RegisterViewState extends State<RegisterView> {
                   if (value.contains(value)) {
                     return 'Email sudah digunakan';
                   }
+  //              if (await isEmailAlreadyUsed(value)) {
+  //                return 'Email sudah digunakan';
+  //              } >> harusnya pake ini tapi error? 
                   return null;
                 },
               ),
