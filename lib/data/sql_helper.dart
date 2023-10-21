@@ -31,8 +31,7 @@ class SQLHelper {
     });
   }
 
-  static Future<int> addProduct(
-      String productName, double price, int stock, String image) async {
+  static Future<int> addProduct(String productName, double price, int stock, String image) async {
     final db = await SQLHelper.db();
     final data = {
       'product_name': productName,
@@ -40,8 +39,15 @@ class SQLHelper {
       'price': price,
       'image': image
     };
-
+    print(data);
     return await db.insert('products', data);
+  }
+
+  static Future<int> editProduct(int id,String productName, double price, int stock, String image) async{
+    final db =await SQLHelper.db();
+    final data = {'product_name': productName, 'price': price, 'stock': stock, 'image': image};
+    print(data);
+    return await db.update('products', data, where: "id = $id");
   }
 
   static Future<List<Map<String, dynamic>>> getProducts() async {
