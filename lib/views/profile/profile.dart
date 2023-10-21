@@ -6,7 +6,7 @@ import 'package:maju/data/sql_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key});
+  const ProfileView({super.key});
 
   @override
   State<ProfileView> createState() => _ProfileViewState();
@@ -14,10 +14,11 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   int _selectedIndex = 2;
-  late TextEditingController _nameController;
-  late TextEditingController _emailController;
-  late TextEditingController _phoneNumberController;
-  late TextEditingController _addressController;
+  TextEditingController? _nameController;
+  TextEditingController? _emailController;
+  TextEditingController? _phoneNumberController;
+  TextEditingController? _addressController;
+  int? id;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -42,6 +43,26 @@ class _ProfileViewState extends State<ProfileView> {
     }
   }
 
+  Future<void> updateUser(int id) async {
+    await SQLHelper.updateProfile(
+        id,
+        _nameController!.text,
+        _emailController!.text,
+        _phoneNumberController!.text,
+        _addressController!.text);
+
+    // Update user data in shared preferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final accountData = [
+      id.toString(),
+      _emailController!.text,
+      _nameController!.text,
+      _phoneNumberController!.text,
+      _addressController!.text,
+    ];
+    prefs.setStringList('account', accountData);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,98 +70,83 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Future<void> _loadUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? name = prefs.getString('Name');
-    String? phone = prefs.getString('phone');
-    String? email = prefs.getString('email');
-    String? address = prefs.getString('address');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    final List<String>? account = prefs.getStringList('account');
     setState(() {
-      _nameController = TextEditingController(text: name ?? '');
-      _phoneNumberController = TextEditingController(text: phone ?? '');
-      _emailController = TextEditingController(text: email ?? '');
-      _addressController = TextEditingController(text: address ?? '');
+      _nameController = TextEditingController(text: account?[2] ?? '');
+      _phoneNumberController = TextEditingController(text: account?[3] ?? '');
+      _emailController = TextEditingController(text: account?[1] ?? '');
+      _addressController = TextEditingController(text: account?[4] ?? '');
+      id = int.parse(account![0]);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 1,
-      length: 5,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Profile"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              CircleAvatar(
-                radius: 50, 
-                backgroundImage: AssetImage('assets/images/profile.jpg'), 
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _phoneNumberController,
-                decoration: InputDecoration(labelText: 'No Telepon'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _addressController,
-                decoration: InputDecoration(labelText: 'Address'),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  // Menyimpan data di Shared Preferences
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  await prefs.setString('Name', _nameController.text);
-                  await prefs.setString('phone', _phoneNumberController.text);
-                  await prefs.setString('email', _emailController.text);
-                  await prefs.setString('address', _addressController.text);
-
-                  // Tampilkan pesan sukses atau lakukan navigasi ke halaman lain
-                  // Contoh: 
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(builder: (context) => NextPage()),
-                  // );
-                },
-                child: Text('Save'),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Profile"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/images/profile.jpg'),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: 'Business',
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _phoneNumberController,
+              decoration: const InputDecoration(labelText: 'No Telepon'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _addressController,
+              decoration: const InputDecoration(labelText: 'Address'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                FocusScope.of(context).unfocus();
+                await updateUser(id!);
+                _loadUserData();
+              },
+              child: const Text('Save'),
             ),
           ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Palette.n900,
-          unselectedItemColor: Palette.n600,
-          onTap: _onItemTapped,
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Business',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Palette.n900,
+        unselectedItemColor: Palette.n600,
+        onTap: _onItemTapped,
       ),
     );
   }

@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
-import 'package:maju/data/entity/products.dart';
+// import 'package:maju/data/entity/products.dart';
 import 'package:maju/data/sql_helper.dart';
-import 'package:maju/views/product/products.dart';
-
+// import 'package:maju/views/product/products.dart';
 
 class InputProduct extends StatefulWidget {
   const InputProduct(
@@ -28,7 +27,7 @@ class _InputProductState extends State<InputProduct> {
   TextEditingController controllerProductName = TextEditingController();
   TextEditingController controllerStock = TextEditingController();
   TextEditingController controllerPrice = TextEditingController();
-  
+
   String? selectedImage, editImage;
   String? originalProductName;
   int? originalStock;
@@ -40,8 +39,6 @@ class _InputProductState extends State<InputProduct> {
     'assets/images/products/product_3.png',
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
     if (widget.id != null) {
@@ -49,31 +46,32 @@ class _InputProductState extends State<InputProduct> {
       controllerStock.text = widget.stock!.toString();
       controllerPrice.text = widget.price!.toStringAsFixed(2);
       selectedImage = widget.image;
-
     }
 
-    void initState(){
+    @override
+    void initState() {
       originalProductName = controllerProductName.text;
       originalStock = int.parse(controllerStock.text);
-      originalPrice =  double.parse(controllerPrice.text);
+      originalPrice = double.parse(controllerPrice.text);
+      super.initState();
     }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("INPUT PRODUCT"),
+        title: const Text("INPUT PRODUCT"),
       ),
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: <Widget>[
           TextField(
             controller: controllerProductName,
-
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), labelText: "Product Name"),
           ),
           TextField(
             controller: controllerPrice,
             inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
             ],
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
@@ -88,38 +86,56 @@ class _InputProductState extends State<InputProduct> {
             decoration: const InputDecoration(
                 border: UnderlineInputBorder(), labelText: "Stock"),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
-          DropdownButtonFormField<String>(
+          DropdownButtonFormField(
             value: selectedImage,
+            items: assetImages
+                .map((e) => DropdownMenuItem(value: e, child: Image.asset(e)))
+                .toList(),
             onChanged: (value) {
               setState(() {
                 selectedImage = value;
                 editImage = value;
-                print(selectedImage);
-                print(editImage);
                 controllerProductName.text = originalProductName!;
                 controllerStock.text = originalStock.toString();
                 controllerPrice.text = originalPrice!.toStringAsFixed(2);
               });
             },
-            items: assetImages.map((e) {
-              return DropdownMenuItem<String>(
-                value: e,
-                child: Image.asset(
-                  e,
-                  width: 80,
-                  height: 80,
-                ),
-              );
-            }).toList(),
             decoration: InputDecoration(
               labelText: 'Product',
               border: OutlineInputBorder(),
             ),
             hint: Text('Pilih Gambar'),
           ),
+          // DropdownButtonFormField<String>(
+          //   value: selectedImage,
+          //   onChanged: (value) {
+          //     setState(() {
+          //       selectedImage = value;
+          //       editImage = value;
+          //       controllerProductName.text = originalProductName!;
+          //       controllerStock.text = originalStock.toString();
+          //       controllerPrice.text = originalPrice!.toStringAsFixed(2);
+          //     });
+          //   },
+          //   items: assetImages.map((e) {
+          //     return DropdownMenuItem<String>(
+          //       value: e,
+          //       child: Image.asset(
+          //         e,
+          //         width: 80,
+          //         height: 80,
+          //       ),
+          //     );
+          //   }).toList(),
+          //   decoration: InputDecoration(
+          //     labelText: 'Product',
+          //     border: OutlineInputBorder(),
+          //   ),
+          //   hint: Text('Pilih Gambar'),
+          // ),
           SizedBox(
             height: 24.0,
           ),
@@ -147,16 +163,19 @@ class _InputProductState extends State<InputProduct> {
         int.parse(controllerStock.text),
         selectedImage!);
   }
+
   Future<void> editProduct(int id) async {
     if (controllerPrice != null && controllerPrice.text != null) {
       if (editImage != null) {
-        await SQLHelper.editProduct(id,  
+        await SQLHelper.editProduct(
+            id,
             controllerProductName.text,
             double.parse(controllerPrice.text),
             int.parse(controllerStock.text),
             editImage!);
       } else {
-       await SQLHelper.editProduct(id,  
+        await SQLHelper.editProduct(
+            id,
             controllerProductName.text,
             double.parse(controllerPrice.text),
             int.parse(controllerStock.text),

@@ -3,6 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:maju/core/utils/currency.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
+import 'package:maju/views/home/home.dart';
+import 'package:maju/views/profile/profile.dart';
 import 'package:maju/views/seller/inputForm.dart';
 
 class ProductsView extends StatefulWidget {
@@ -15,6 +17,29 @@ class ProductsView extends StatefulWidget {
 class _ProductsViewState extends State<ProductsView> {
   List<Map<String, dynamic>> products = [];
   List<Map<String, dynamic>> foundProducts = [];
+  int _selectedIndex = 1;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const HomeView()),
+        );
+        break;
+      case 1:
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const ProductsView()));
+        break;
+      case 2:
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const ProfileView()),
+        );
+        break;
+    }
+  }
 
   void refresh() async {
     final data = await SQLHelper.getProducts();
@@ -35,6 +60,7 @@ class _ProductsViewState extends State<ProductsView> {
           .where(
               (product) => product['product_name'].toLowerCase().contains(key))
           .toList();
+      print("ALOO ${results}");
     }
     setState(() {
       foundProducts = results;
@@ -55,9 +81,9 @@ class _ProductsViewState extends State<ProductsView> {
 
   @override
   Widget build(BuildContext context) {
-    if (foundProducts.isEmpty) {
-      foundProducts = products;
-    }
+    // if (foundProducts.isEmpty) {
+    //   foundProducts = products;
+    // }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Products"),
@@ -101,107 +127,138 @@ class _ProductsViewState extends State<ProductsView> {
                   fontWeight: FontWeight.w500),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: foundProducts.length,
-                itemBuilder: (context, index) {
-                  return Slidable(
-                    actionPane: const SlidableDrawerActionPane(),
-                    secondaryActions: [
-                      IconSlideAction(
-                        caption: 'Update',
-                        color: Colors.blue,
-                        icon: Icons.update,
-                        onTap: () async {
-                          if (products[index]['product_name'] != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => InputProduct(
-                                  id: products[index]['id'],
-                                  productName: products[index]['product_name'],
-                                  stock: products[index]['stock'],
-                                  price: products[index]['price'],
-                                  image: products[index]['image'],
-                                ),
-                              ),
-                            ).then((_) => refresh());
-                          } else {
-                            print("Data produk memiliki nilai null  $products, $index");
-                          }
-                        },
-                      ),
-                      IconSlideAction(
-                        caption: 'Delete',
-                        color: Colors.red,
-                        icon: Icons.delete,
-                        onTap: () async {
-                          await deleteProduct(products[index]['id']);
-                        },
-                      )
-                    ],
-                    child: Card(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                              'https://www.blibli.com/friends-backend/wp-content/uploads/2022/08/5-Ciri-Sepatu-Warrior-Asli-Kamu-Wajib-Tahu.jpeg'),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+              child: foundProducts.isEmpty
+                  ? const Column(
+                      children: [
+                        SizedBox(
+                          height: 16.0,
+                        ),
+                        Text("No products found...")
+                      ],
+                    )
+                  : ListView.builder(
+                      itemCount: foundProducts.length,
+                      itemBuilder: (context, index) {
+                        return Slidable(
+                          actionPane: const SlidableDrawerActionPane(),
+                          secondaryActions: [
+                            IconSlideAction(
+                              caption: 'Update',
+                              color: Colors.blue,
+                              icon: Icons.update,
+                              onTap: () async {
+                                if (products[index]['product_name'] != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => InputProduct(
+                                        id: products[index]['id'],
+                                        productName: products[index]
+                                            ['product_name'],
+                                        stock: products[index]['stock'],
+                                        price: products[index]['price'],
+                                        image: products[index]['image'],
+                                      ),
+                                    ),
+                                  ).then((_) => refresh());
+                                } else {
+                                  print(
+                                      "Data produk memiliki nilai null  $products, $index");
+                                }
+                              },
+                            ),
+                            IconSlideAction(
+                              caption: 'Delete',
+                              color: Colors.red,
+                              icon: Icons.delete,
+                              onTap: () async {
+                                await deleteProduct(products[index]['id']);
+                              },
+                            )
+                          ],
+                          child: Card(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  foundProducts[index]['product_name'],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(
-                                        fontSize: 14.0,
-                                        color: Palette.n900,
-                                        fontWeight: FontWeight.w400,
+                                Image.asset(foundProducts[index]['image']),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        foundProducts[index]['product_name'],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge!
+                                            .copyWith(
+                                              fontSize: 14.0,
+                                              color: Palette.n900,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                       ),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  CurrencyFormat.convertToIdr(
-                                      foundProducts[index]['price'], 2),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(
-                                        fontSize: 16.0,
-                                        color: Palette.n900,
-                                        fontWeight: FontWeight.w600,
+                                      const SizedBox(
+                                        height: 8,
                                       ),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  "${foundProducts[index]['stock'].toString()} items left",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(
-                                        fontSize: 14.0,
-                                        color: Palette.n900,
-                                        fontWeight: FontWeight.w400,
+                                      Text(
+                                        CurrencyFormat.convertToIdr(
+                                            foundProducts[index]['price'], 2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge!
+                                            .copyWith(
+                                              fontSize: 16.0,
+                                              color: Palette.n900,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        "${foundProducts[index]['stock'].toString()} items left",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge!
+                                            .copyWith(
+                                              fontSize: 14.0,
+                                              color: Palette.n900,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Business',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Palette.n900,
+        unselectedItemColor: Palette.n600,
+        onTap: _onItemTapped,
       ),
     );
   }

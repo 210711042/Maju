@@ -28,7 +28,7 @@ class SQLHelper {
         name TEXT,
         email TEXT
       );
-    """); 
+    """);
   }
 
   static Future<sql.Database> db() async {
@@ -38,7 +38,8 @@ class SQLHelper {
     });
   }
 
-  static Future<int> addProduct(String productName, double price, int stock, String image) async {
+  static Future<int> addProduct(
+      String productName, double price, int stock, String image) async {
     final db = await SQLHelper.db();
     final data = {
       'product_name': productName,
@@ -50,9 +51,15 @@ class SQLHelper {
     return await db.insert('products', data);
   }
 
-  static Future<int> editProduct(int id,String productName, double price, int stock, String image) async{
-    final db =await SQLHelper.db();
-    final data = {'product_name': productName, 'price': price, 'stock': stock, 'image': image};
+  static Future<int> editProduct(
+      int id, String productName, double price, int stock, String image) async {
+    final db = await SQLHelper.db();
+    final data = {
+      'product_name': productName,
+      'price': price,
+      'stock': stock,
+      'image': image
+    };
     print(data);
     return await db.update('products', data, where: "id = $id");
   }
@@ -67,7 +74,7 @@ class SQLHelper {
     return await db.delete('products', where: 'id = $id');
   }
 
-  static Future<bool> login(String email, String password) async {
+  static Future<List> login(String email, String password) async {
     final db = await SQLHelper.db();
 
     final List<Map<String, dynamic>> users = await db.query(
@@ -76,12 +83,17 @@ class SQLHelper {
       whereArgs: [email, password],
     );
 
-    return users.isNotEmpty;
+    return users;
   }
 
   static Future<List<Map<String, dynamic>>> getUsers() async {
     final db = await SQLHelper.db();
     return db.query('users');
+  }
+
+  static Future<List<Map<String, dynamic>>> getUserById(int id) async {
+    final db = await SQLHelper.db();
+    return db.query('users', where: "id = $id");
   }
 
   static Future<int> addUser(String email, String password, String username,
@@ -97,16 +109,16 @@ class SQLHelper {
     return await db.insert('users', user);
   }
 
-  static Future<int> updateProfile(int id, String name, String email) async {
-  final db = await SQLHelper.db();
-  final profile = {
+  static Future<int> updateProfile(
+      int id, String name, String email, String phone, String address) async {
+    final db = await SQLHelper.db();
+    final profile = {
+      'username': name,
+      'email': email,
+      'phone': phone,
+      'address': address
+    };
 
-    'name' : name,
-    'email': email,
-  };
-
-  return await db.update('profile', profile,where: "id = $id");
-}
-
-
+    return await db.update('users', profile, where: "id = $id");
+  }
 }

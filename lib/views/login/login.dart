@@ -5,6 +5,7 @@ import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
 import 'package:maju/views/login/register.dart';
 import 'package:maju/data/sql_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   // const LoginView({super.key});
@@ -30,15 +31,23 @@ class _LoginViewState extends State<LoginView> {
   // String _password = '';
 
   void onLoginTaped() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final isAuthenticated =
         await SQLHelper.login(_emailController.text, _passwordController.text);
+    await prefs.setStringList('account', <String>[
+      isAuthenticated[0]['id'].toString(),
+      isAuthenticated[0]['email'],
+      isAuthenticated[0]['username'],
+      isAuthenticated[0]['phone'],
+      isAuthenticated[0]['address']
+    ]);
 
-    if (isAuthenticated) {
+    if (isAuthenticated.isNotEmpty) {
       Fluttertoast.showToast(
         msg: "Selamat Data di MarketMaju!",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
-        backgroundColor: Color.fromARGB(255, 91, 202, 95),
+        backgroundColor: const Color.fromARGB(255, 91, 202, 95),
         textColor: Colors.white,
         fontSize: 19.0,
       );
@@ -50,7 +59,7 @@ class _LoginViewState extends State<LoginView> {
         msg: "Email atau Password salah",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
-        backgroundColor: Color.fromARGB(255, 255, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 255, 0, 0),
         textColor: Colors.white,
         fontSize: 19.0,
       );

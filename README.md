@@ -18,6 +18,15 @@ Aplikasi E-commerce Maju (Marketmaju) berbentuk market place yang dapat membantu
 - Apply Grid at home page
 - Profile page with tab
 
+## Features UGD 7
+
+- Register View: Gratia
+- Login View, Authentication, Toast when success/fail: Natasya
+- Profile View: Natalia
+- Profile Update and Read: Abraham
+- Create and Update Feature: Nicodemus
+- Search and Delete: Abraham
+
 ## Tech Stack
 
 **Client:** Flutter
