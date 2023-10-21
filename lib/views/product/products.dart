@@ -72,18 +72,22 @@ class _ProductsViewState extends State<ProductsView> {
                         color: Colors.blue,
                         icon: Icons.update,
                         onTap: () async {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => InputProduct(
-                          //       id: products[index]['id'],
-                          //       productName: products[index]['productName'],
-                          //       stock: stock,
-                          //       price: price,
-                          //       image: image,
-                          //     ),
-                          //   ),
-                          // ).then((_) => refresh());
+                          if (products[index]['product_name'] != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InputProduct(
+                                  id: products[index]['id'],
+                                  productName: products[index]['product_name'],
+                                  stock: products[index]['stock'],
+                                  price: products[index]['price'],
+                                  image: products[index]['image'],
+                                ),
+                              ),
+                            ).then((_) => refresh());
+                          } else {
+                            print("Data produk memiliki nilai null  $products, $index");
+                          }
                         },
                       ),
                       IconSlideAction(
@@ -99,10 +103,11 @@ class _ProductsViewState extends State<ProductsView> {
                       title: Row(
                         children: [
                           Text(products[index]['product_name'] + " | "),
-                          Text(products[index]['image']),
+                          Text(products[index]['stock'].toString() + " | "),
+                          Text(products[index]['price'].toStringAsFixed(2)),
                         ],
                       ),
-                      subtitle: Text(products[index]['image']),
+                      subtitle: Image.asset(products[index]['image']),
                     ),
                   );
                 },
