@@ -22,6 +22,13 @@ class SQLHelper {
       address TEXT
     );
   """);
+    await database.execute("""
+      CREATE TABLE profil(
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        email TEXT
+      );
+    """); 
   }
 
   static Future<sql.Database> db() async {
@@ -49,18 +56,6 @@ class SQLHelper {
     return db.query('products');
   }
 
-  static Future<int> addUser(String email, String password, String username,
-      String phonenumber, String address) async {
-    final db = await SQLHelper.db();
-    final user = {
-      'email': email,
-      'password': password,
-      'username': username,
-      'phone': phonenumber,
-      'address': address
-    };
-    return await db.insert('users', user);
-  }
 
   static Future<bool> login(String email, String password) async {
     final db = await SQLHelper.db();
@@ -78,4 +73,30 @@ class SQLHelper {
     final db = await SQLHelper.db();
     return db.query('users');
   }
+
+  static Future<int> addUser(String email, String password, String username,
+      String phonenumber, String address) async {
+    final db = await SQLHelper.db();
+    final user = {
+      'email': email,
+      'password': password,
+      'username': username,
+      'phone': phonenumber,
+      'address': address
+    };
+    return await db.insert('users', user);
+  }
+
+  static Future<int> updateProfile(int id, String name, String email) async {
+  final db = await SQLHelper.db();
+  final profile = {
+
+    'name' : name,
+    'email': email,
+  };
+
+  return await db.update('profile', profile,where: "id = $id");
+}
+
+
 }
