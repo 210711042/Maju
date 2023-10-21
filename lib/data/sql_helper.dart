@@ -55,6 +55,11 @@ class SQLHelper {
     return db.query('products');
   }
 
+  static Future<int> deleteProduct(int id) async {
+    final db = await SQLHelper.db();
+    return await db.delete('products', where: 'id = $id');
+  }
+
   static Future<int> addUser(String email, String password, String username,
       String phonenumber, String address) async {
     final db = await SQLHelper.db();
