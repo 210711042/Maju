@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:maju/core/utils/currency.dart';
 import 'package:maju/core/widgets/maju_basic_product.dart';
 import 'package:maju/core/widgets/maju_basic_shop.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:http/http.dart' as http;
-import 'package:maju/views/login/login.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:maju/views/login/login.dart';
 import 'package:maju/views/product/productDetail.dart';
 import 'package:maju/views/product/products.dart';
 import 'package:maju/views/profile/profile.dart';
-import 'package:flutter/src/rendering/box.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+// import 'package:flutter/src/rendering/box.dart';
+// import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -74,7 +75,7 @@ class _HomeViewState extends State<HomeView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 CarouselSlider(
@@ -105,7 +106,7 @@ class _HomeViewState extends State<HomeView> {
                     );
                   }).toList(),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 48.0,
                 ),
                 Text(
@@ -115,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
                       color: Palette.n900,
                       fontWeight: FontWeight.w500),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Row(
@@ -137,7 +138,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 SingleChildScrollView(
@@ -183,10 +184,10 @@ class _HomeViewState extends State<HomeView> {
                       color: Palette.n900,
                       fontWeight: FontWeight.w500),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
-                SingleChildScrollView(
+                const SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,9 +214,9 @@ class _HomeViewState extends State<HomeView> {
                   height: 16.0,
                 ),
                 GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
@@ -241,7 +242,7 @@ class _HomeViewState extends State<HomeView> {
                           child: MajuGridProduct(
                             image: "product_3.png",
                             title: products[index]['product_name'],
-                            price: "179.900",
+                            price: 179900,
                             location: "Semarang",
                             rating: "4.7",
                             sold: "200+",
@@ -259,10 +260,10 @@ class _HomeViewState extends State<HomeView> {
                       color: Palette.n900,
                       fontWeight: FontWeight.w500),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
-                ProductGrid()
+                const ProductGrid()
               ],
             ),
           )),
@@ -301,16 +302,16 @@ class _ProductGridState extends State<ProductGrid> {
   @override
   Widget build(BuildContext context) {
     // Calculate the available width for each product item
-    final availableWidth = (MediaQuery.of(context).size.width - 59) / 2;
+    // final availableWidth = (MediaQuery.of(context).size.width - 59) / 2;
 
     return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        mainAxisExtent: 252,
+        mainAxisExtent: 256,
       ),
       itemCount: 10,
       itemBuilder: (_, index) {
@@ -319,7 +320,7 @@ class _ProductGridState extends State<ProductGrid> {
           child: MajuGridProduct(
             image: "product_3.png",
             title: "3 In 1 Kitchen Set lengkap untuk dapur",
-            price: "179.900",
+            price: 179900,
             location: "Semarang",
             rating: "4.7",
             sold: "200+",
@@ -333,7 +334,7 @@ class _ProductGridState extends State<ProductGrid> {
 class MajuGridProduct extends StatefulWidget {
   final String image;
   final String title;
-  final String price;
+  final double price;
   final String location;
   final String rating;
   final String sold;
@@ -405,7 +406,7 @@ class _MajuGridProductState extends State<MajuGridProduct> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                  left: 4.0, right: 4.0, top: 4.0, bottom: 8.0),
+                  left: 8.0, right: 8.0, top: 8.0, bottom: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -423,7 +424,7 @@ class _MajuGridProductState extends State<MajuGridProduct> {
                     height: 4,
                   ),
                   Text(
-                    "Rp${widget.price}",
+                    CurrencyFormat.convertToIdr(widget.price, 2),
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           fontSize: 14.0,
                           color: Palette.n900,

@@ -16,6 +16,8 @@ dependencies:
   sqflite: ^2.2.6
   flutter_slidable: ^0.6.0
   shared_preferences: ^2.0.7
+  intl: ^0.17.0
+
 
 dev_dependencies:
   flutter_test:

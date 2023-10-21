@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
-import 'package:maju/data/entity/users.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/login/login.dart';
 import 'package:maju/data/sql_helper.dart';
