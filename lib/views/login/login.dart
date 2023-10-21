@@ -34,13 +34,6 @@ class _LoginViewState extends State<LoginView> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final isAuthenticated =
         await SQLHelper.login(_emailController.text, _passwordController.text);
-    await prefs.setStringList('account', <String>[
-      isAuthenticated[0]['id'].toString(),
-      isAuthenticated[0]['email'],
-      isAuthenticated[0]['username'],
-      isAuthenticated[0]['phone'],
-      isAuthenticated[0]['address']
-    ]);
 
     if (isAuthenticated.isNotEmpty) {
       Fluttertoast.showToast(
@@ -51,10 +44,9 @@ class _LoginViewState extends State<LoginView> {
         textColor: Colors.white,
         fontSize: 19.0,
       );
-      // Autentikasi berhasil, arahkan ke halaman beranda atau tindakan selanjutnya
+
       Navigator.of(context).push(HomeView.route());
     } else {
-      // Autentikasi gagal, tampilkan pesan kesalahan
       Fluttertoast.showToast(
         msg: "Email atau Password salah",
         toastLength: Toast.LENGTH_SHORT,
@@ -64,6 +56,13 @@ class _LoginViewState extends State<LoginView> {
         fontSize: 19.0,
       );
     }
+    await prefs.setStringList('account', <String>[
+      isAuthenticated[0]['id'].toString(),
+      isAuthenticated[0]['email'],
+      isAuthenticated[0]['username'],
+      isAuthenticated[0]['phone'],
+      isAuthenticated[0]['address']
+    ]);
   }
 
   @override
@@ -82,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
                     color: Palette.n900,
                     fontWeight: FontWeight.w500),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Text(
@@ -91,7 +90,7 @@ class _LoginViewState extends State<LoginView> {
                       .textTheme
                       .bodySmall!
                       .copyWith(fontSize: 12.0, fontWeight: FontWeight.normal)),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               TextFormField(
@@ -108,7 +107,7 @@ class _LoginViewState extends State<LoginView> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               TextFormField(
@@ -128,7 +127,7 @@ class _LoginViewState extends State<LoginView> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
               MajuBasicButton(
@@ -179,8 +178,8 @@ class _LoginViewState extends State<LoginView> {
         });
       },
       icon: _isSecurePassword
-          ? Icon(Icons.visibility)
-          : Icon(Icons.visibility_off),
+          ? const Icon(Icons.visibility)
+          : const Icon(Icons.visibility_off),
       color: Colors.grey,
     );
   }

@@ -1,10 +1,7 @@
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
-// import 'package:maju/data/entity/products.dart';
 import 'package:maju/data/sql_helper.dart';
-// import 'package:maju/views/product/products.dart';
 
 class InputProduct extends StatefulWidget {
   const InputProduct(
@@ -109,34 +106,7 @@ class _InputProductState extends State<InputProduct> {
             ),
             hint: Text('Pilih Gambar'),
           ),
-          // DropdownButtonFormField<String>(
-          //   value: selectedImage,
-          //   onChanged: (value) {
-          //     setState(() {
-          //       selectedImage = value;
-          //       editImage = value;
-          //       controllerProductName.text = originalProductName!;
-          //       controllerStock.text = originalStock.toString();
-          //       controllerPrice.text = originalPrice!.toStringAsFixed(2);
-          //     });
-          //   },
-          //   items: assetImages.map((e) {
-          //     return DropdownMenuItem<String>(
-          //       value: e,
-          //       child: Image.asset(
-          //         e,
-          //         width: 80,
-          //         height: 80,
-          //       ),
-          //     );
-          //   }).toList(),
-          //   decoration: InputDecoration(
-          //     labelText: 'Product',
-          //     border: OutlineInputBorder(),
-          //   ),
-          //   hint: Text('Pilih Gambar'),
-          // ),
-          SizedBox(
+          const SizedBox(
             height: 24.0,
           ),
           MajuBasicButton(
@@ -145,7 +115,6 @@ class _InputProductState extends State<InputProduct> {
               if (widget.id == null) {
                 await addProduct();
               } else {
-                print(controllerProductName.value);
                 await editProduct(widget.id!);
               }
               Navigator.pop(context);

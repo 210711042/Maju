@@ -120,6 +120,9 @@ class _RegisterViewState extends State<RegisterView> {
                   if (value == null || value.isEmpty) {
                     return 'Username tidak boleh kosong';
                   }
+                  if (value.length < 5) {
+                    return 'Username harus lebih dari 5 karakter';
+                  }
                   return null;
                 },
               ),

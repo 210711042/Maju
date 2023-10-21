@@ -60,7 +60,6 @@ class _ProductsViewState extends State<ProductsView> {
           .where(
               (product) => product['product_name'].toLowerCase().contains(key))
           .toList();
-      print("ALOO ${results}");
     }
     setState(() {
       foundProducts = results;
