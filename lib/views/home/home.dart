@@ -1,4 +1,4 @@
-import 'dart:ffi';
+// import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,6 +20,8 @@ import 'package:maju/views/profile/profile.dart';
 // import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+
+import 'package:maju/views/profile/user_profile.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -77,7 +79,7 @@ class _HomeViewState extends State<HomeView> {
             .push(MaterialPageRoute(builder: ((context) => ProductsView())));
       case 2:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => ProfileView()),
+          MaterialPageRoute(builder: (context) => UserProfile()),
         );
         break;
     }
