@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:maju/core/utils/currency.dart';
 import 'package:maju/data/sql_helper.dart';
@@ -6,6 +7,7 @@ import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
 import 'package:maju/views/profile/profile.dart';
 import 'package:maju/views/seller/inputForm.dart';
+import 'dart:convert';
 
 class ProductsView extends StatefulWidget {
   const ProductsView({super.key});
@@ -41,7 +43,19 @@ class _ProductsViewState extends State<ProductsView> {
     }
   }
 
+  Future<void> readJson() async {
+    final String response =
+        await rootBundle.loadString('assets/data/products.json');
+    final data = await json.decode(response);
+    print(data['products']);
+    setState(() {
+      products = data['products'];
+    });
+  }
+
   void refresh() async {
+//     final String response = await rootBundle.loadString('assets/sample.json');
+// final data = await json.decode(response);
     final data = await SQLHelper.getProducts();
 
     setState(() {
@@ -115,6 +129,11 @@ class _ProductsViewState extends State<ProductsView> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0))),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  readJson();
+                },
+                child: Text("Test")),
             const SizedBox(
               height: 24,
             ),

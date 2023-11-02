@@ -1,8 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:maju/core/utils/currency.dart';
+import 'package:maju/core/widgets/UI/maju_basic_appbar.dart';
 import 'package:maju/core/widgets/maju_basic_product.dart';
 import 'package:maju/core/widgets/maju_basic_shop.dart';
+import 'package:maju/core/widgets/maju_product.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +18,8 @@ import 'package:maju/views/product/products.dart';
 import 'package:maju/views/profile/profile.dart';
 // import 'package:flutter/src/rendering/box.dart';
 // import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -26,7 +32,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   List<Map<String, dynamic>> products = [];
-
+  List<Map<String, dynamic>> dummyProducts = [];
   void refresh() async {
     final data = await SQLHelper.getProducts();
     setState(() {
@@ -35,9 +41,21 @@ class _HomeViewState extends State<HomeView> {
     print(products);
   }
 
+  Future<void> readJson() async {
+    final String response =
+        await rootBundle.loadString('assets/data/products.json');
+    final data = await json.decode(response);
+    final fakeProducts = List<Map<String, dynamic>>.from(data['products']);
+
+    setState(() {
+      dummyProducts = fakeProducts;
+    });
+  }
+
   @override
   void initState() {
     refresh();
+    readJson();
     super.initState();
   }
 
@@ -68,7 +86,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Updated soon")),
+      appBar: MajuBasicAppBar(
+        title: "Cari produk...",
+      ),
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(
@@ -217,39 +237,88 @@ class _HomeViewState extends State<HomeView> {
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
-                    mainAxisExtent: 252,
+                    crossAxisCount: 2, // number of items in each row
+                    mainAxisSpacing: 16.0, // spacing between rows
+                    crossAxisSpacing: 16.0, // spacing between columns
+                    mainAxisExtent: 288,
                   ),
-                  itemCount: products.length,
+                  padding: const EdgeInsets.all(0.0), // padding around the grid
+                  itemCount: dummyProducts.length, // total number of items
                   itemBuilder: (_, index) {
                     return GestureDetector(
-                        onTap: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProductDetail(
-                                      id: products[index]['id'],
-                                      productName: products[index]
-                                          ['product_name'],
-                                      price: products[index]['price'],
-                                      stock: products[index]['stock'],
-                                      image: products[index]['image'])));
-                        },
-                        child: Container(
-                          color: Palette.b100,
-                          child: MajuGridProduct(
-                            image: "product_3.png",
-                            title: products[index]['product_name'],
-                            price: 179900,
-                            location: "Semarang",
-                            rating: "4.7",
-                            sold: "200+",
-                          ),
-                        ));
+                      onTap: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetail(
+                                    id: 1,
+                                    productName: dummyProducts[index]['title'],
+                                    price: dummyProducts[index]['price']
+                                        .toDouble(),
+                                    stock: dummyProducts[index]['stock'],
+                                    images: dummyProducts[index]['images'],
+                                    thumbnail: dummyProducts[index]
+                                        ['thumbnail'],
+                                    description: dummyProducts[index]
+                                        ['description'])));
+                      },
+                      child: MajuProduct(
+                          image: dummyProducts[index]['thumbnail'],
+                          title: dummyProducts[index]['title'],
+                          price: dummyProducts[index]['price'].toDouble(),
+                          location: "jakarta",
+                          rating:
+                              dummyProducts[index]['rating'].toDouble() ?? 0,
+                          sold: "200+"),
+                    );
                   },
                 ),
+
+                // GridView.builder(
+                //   physics: const NeverScrollableScrollPhysics(),
+                //   shrinkWrap: true,
+                //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                //     crossAxisCount: 2,
+                //     crossAxisSpacing: 8,
+                //     mainAxisSpacing: 8,
+                //     mainAxisExtent: 252,
+                //   ),
+                //   itemCount: products.length,
+                //   itemBuilder: (_, index) {
+                //     return GestureDetector(
+                //         onTap: () async {
+                //           Navigator.push(
+                //               context,
+                //               MaterialPageRoute(
+                //                   builder: (context) => ProductDetail(
+                //                       id: products[index]['id'],
+                //                       productName: products[index]
+                //                           ['product_name'],
+                //                       price: products[index]['price'],
+                //                       stock: products[index]['stock'],
+                //                       image: products[index]['image'])));
+                //         },
+                //         child: Container(
+                //           color: Palette.b100,
+                //           child: const MajuProduct(
+                //               image: "product_3.png",
+                //               title:
+                //                   "Testing judul produk kira kira ini cocok apa ngga",
+                //               price: 172810,
+                //               location: "Jakarta Selatan",
+                //               rating: 4.8,
+                //               sold: "200+"),
+                // child: MajuGridProduct(
+                //   image: "product_3.png",
+                //   title: products[index]['product_name'],
+                //   price: 179900,
+                //   location: "Semarang",
+                //   rating: "4.7",
+                //   sold: "200+",
+                // ),
+                // ));
+                // },
+                // ),
                 const SizedBox(
                   height: 24,
                 ),
@@ -311,7 +380,7 @@ class _ProductGridState extends State<ProductGrid> {
         crossAxisCount: 2,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        mainAxisExtent: 256,
+        mainAxisExtent: 270,
       ),
       itemCount: 10,
       itemBuilder: (_, index) {
@@ -424,7 +493,7 @@ class _MajuGridProductState extends State<MajuGridProduct> {
                     height: 4,
                   ),
                   Text(
-                    CurrencyFormat.convertToIdr(widget.price, 2),
+                    CurrencyFormat.convertToIdr(widget.price, 0),
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           fontSize: 14.0,
                           color: Palette.n900,
