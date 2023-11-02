@@ -15,7 +15,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 // import 'package:maju/views/login/login.dart';
 import 'package:maju/views/product/productDetail.dart';
 import 'package:maju/views/product/products.dart';
-import 'package:maju/views/profile/profile.dart';
+// import 'package:maju/views/profile/profile.dart';
 // import 'package:flutter/src/rendering/box.dart';
 // import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';

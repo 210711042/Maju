@@ -34,6 +34,7 @@ class MajuBasicButton extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
+                side: BorderSide(width: 1, color: Palette.n900),
                 textStyle:
                     TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         onPressed: onPressed,
