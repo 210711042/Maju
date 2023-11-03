@@ -130,6 +130,23 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  Future<void> _authenticateFaceID() async {
+  try {
+    bool authenticated = await auth.authenticate(
+        localizedReason: "Use Face ID for authentication",
+        options: const AuthenticationOptions(
+            stickyAuth: true, biometricOnly: true));
+
+    if (authenticated) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const EditProfile()));
+    }
+  } on PlatformException catch (e) {
+    print(e);
+  }
+}
+  
+
   // Future<void> _getAvailableBiometrics() async {
   //   List<BiometricType> availableBiometrics =
   //       await auth.getAvailableBiometrics();
