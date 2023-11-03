@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:maju/core/utils/currency.dart';
 import 'package:maju/core/widgets/UI/maju_basic_appbar.dart';
 import 'package:maju/themes/palette.dart';
+import 'package:maju/views/product/generate_qr.dart';
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail(
@@ -150,6 +151,23 @@ class _ProductDetailState extends State<ProductDetail> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GenerateQRPage(
+                        productName: controllerProductName.text,
+                        price:  double.parse(controllerPrice.text),
+                      ),
+                    ),
+                  );
+                },
+                child: Text('Buat QR Code'),
               ),
             ),
           ],
