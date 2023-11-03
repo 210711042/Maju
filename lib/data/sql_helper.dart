@@ -22,13 +22,6 @@ class SQLHelper {
       address TEXT
     );
   """);
-    await database.execute("""
-      CREATE TABLE profil(
-        id INTEGER PRIMARY KEY,
-        name TEXT,
-        email TEXT
-      );
-    """);
   }
 
   static Future<sql.Database> db() async {
