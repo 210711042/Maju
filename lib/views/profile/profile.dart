@@ -1,9 +1,12 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
 import 'package:maju/views/product/products.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -13,12 +16,14 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  String _profileImagePath = '';
   int _selectedIndex = 2;
   TextEditingController? _nameController;
   TextEditingController? _emailController;
   TextEditingController? _phoneNumberController;
   TextEditingController? _addressController;
   int? id;
+  
 
   void _onItemTapped(int index) {
     setState(() {
@@ -82,6 +87,33 @@ class _ProfileViewState extends State<ProfileView> {
     });
   }
 
+  Future<void> _ambilGambarDariKamera() async {
+  final picker = ImagePicker();
+  final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+  if (pickedFile != null) {
+    final imagePath = pickedFile.path;
+    await SQLHelper.updateProfileImage(id!, imagePath);
+
+    // Update gambar profil di SharedPreferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('account', [
+      id.toString(),
+      _emailController!.text,
+      _nameController!.text,
+      _phoneNumberController!.text,
+      _addressController!.text,
+      imagePath, // Menambah path gambar ke SharedPreferences
+    ]);
+
+    setState(() {
+      // Perbarui tampilan gambar profil
+      _profileImagePath = imagePath;
+    });
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +126,8 @@ class _ProfileViewState extends State<ProfileView> {
           children: [
             const CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/images/profile.jpg'),
+              // backgroundImage: _profileImagePath.isNotEmpty ? 
+              // FileImage(File(_profileImagePath)): const AssetImage('assets/images/profile.jpg') as ImageProvider,
             ),
             const SizedBox(height: 16),
             TextFormField(

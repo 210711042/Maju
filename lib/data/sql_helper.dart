@@ -19,7 +19,8 @@ class SQLHelper {
       password TEXT,
       username TEXT,
       phone TEXT,
-      address TEXT
+      address TEXT,
+      profile_image TEXT
     );
   """);
   }
@@ -114,4 +115,13 @@ class SQLHelper {
 
     return await db.update('users', profile, where: "id = $id");
   }
+
+  static Future<int> updateProfileImage(int id, String imagePath) async {
+  final db = await SQLHelper.db();
+  final data = {
+    'profile_image': imagePath,
+  };
+  return await db.update('users', data, where: "id = ?", whereArgs: [id]);
+}
+
 }
