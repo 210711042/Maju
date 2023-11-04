@@ -27,6 +27,14 @@ Aplikasi E-commerce Maju (Marketmaju) berbentuk market place yang dapat membantu
 - Create and Update Feature: Nicodemus
 - Search and Delete: Abraham
 
+## Features UGD 9 | Hardware
+
+- Natasya: Screen brightness when opening QR Scanner
+- Natalia: Save profile image
+- Gratia: Scan QR Code
+- Nicodemus: Generate QR Code
+- Abraham: Fingerprint sensor
+
 ## Tech Stack
 
 **Client:** Flutter
