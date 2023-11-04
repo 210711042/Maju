@@ -1,4 +1,6 @@
 // import 'package:maju/data/entity/users.dart';
+import 'dart:typed_data';
+
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLHelper {
@@ -20,7 +22,7 @@ class SQLHelper {
       username TEXT,
       phone TEXT,
       address TEXT,
-      profile_image TEXT
+      profile_image BLOB
     );
   """);
   }
@@ -98,7 +100,8 @@ class SQLHelper {
       'password': password,
       'username': username,
       'phone': phonenumber,
-      'address': address
+      'address': address,
+      'profile_image': null
     };
     return await db.insert('users', user);
   }
@@ -116,12 +119,19 @@ class SQLHelper {
     return await db.update('users', profile, where: "id = $id");
   }
 
-  static Future<int> updateProfileImage(int id, String imagePath) async {
-  final db = await SQLHelper.db();
-  final data = {
-    'profile_image': imagePath,
-  };
-  return await db.update('users', data, where: "id = ?", whereArgs: [id]);
-}
+  static Future<int> updateProfileImage(int id, Uint8List imagePath) async {
+    final db = await SQLHelper.db();
+    final data = {
+      'profile_image': imagePath,
+    };
+    return await db.update('users', data, where: "id = ?", whereArgs: [id]);
+  }
 
+  static Future<int> deleteProfileImage(int id) async {
+    final db = await SQLHelper.db();
+    final data = {
+      'profile_image': null,
+    };
+    return db.update('users', data, where: "id = $id");
+  }
 }

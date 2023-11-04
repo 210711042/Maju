@@ -71,15 +71,15 @@ class _HomeViewState extends State<HomeView> {
     switch (index) {
       case 0:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => HomeView()),
+          MaterialPageRoute(builder: (context) => const HomeView()),
         );
         break;
       case 1:
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: ((context) => ProductsView())));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: ((context) => const ProductsView())));
       case 2:
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => UserProfile()),
+          MaterialPageRoute(builder: (context) => const UserProfile()),
         );
         break;
     }
@@ -88,7 +88,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MajuBasicAppBar(
+      appBar: const MajuBasicAppBar(
         title: "Cari produk...",
       ),
       body: Padding(
@@ -105,8 +105,9 @@ class _HomeViewState extends State<HomeView> {
                     height: 200,
                     // aspectRatio: 16 / 9,
                     autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 5),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayInterval: const Duration(seconds: 5),
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 800),
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enlargeCenterPage: true,
                     enlargeFactor: 0.3,
@@ -242,7 +243,7 @@ class _HomeViewState extends State<HomeView> {
                     crossAxisCount: 2, // number of items in each row
                     mainAxisSpacing: 16.0, // spacing between rows
                     crossAxisSpacing: 16.0, // spacing between columns
-                    mainAxisExtent: 288,
+                    mainAxisExtent: 290,
                   ),
                   padding: const EdgeInsets.all(0.0), // padding around the grid
                   itemCount: dummyProducts.length, // total number of items

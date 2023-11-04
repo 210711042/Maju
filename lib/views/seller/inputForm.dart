@@ -100,11 +100,11 @@ class _InputProductState extends State<InputProduct> {
                 controllerPrice.text = originalPrice!.toStringAsFixed(2);
               });
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Product',
               border: OutlineInputBorder(),
             ),
-            hint: Text('Pilih Gambar'),
+            hint: const Text('Pilih Gambar'),
           ),
           const SizedBox(
             height: 24.0,

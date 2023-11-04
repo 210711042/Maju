@@ -1,11 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:maju/core/widgets/UI/maju_basic_appbar.dart';
 import 'package:maju/core/widgets/UI/maju_basic_tile.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
+import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
+import 'package:maju/views/login/login.dart';
 import 'package:maju/views/profile/edit_profile.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:maju/views/qr_scanner/scan_qr.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image/image.dart' as img;
+
+File? shownImage;
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -18,100 +28,149 @@ class _UserProfileState extends State<UserProfile> {
   late final LocalAuthentication auth;
   bool _supportState = false;
 
+  List foundUser = [];
+
+  // Image picker variable
+  final ImagePicker picker = ImagePicker();
+  Uint8List? imgFile;
+  File? selectedImage;
+
+  TextEditingController? nameController;
+  TextEditingController? emailController;
+  TextEditingController? phoneNumberController;
+  TextEditingController? addressController;
+  int? id;
+
+  Future<void> _loadUserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final List<String>? account = prefs.getStringList('account');
+    final users = await SQLHelper.getUserById(int.parse(account![0]));
+    setState(() {
+      foundUser = users;
+    });
+    debugPrint(foundUser[0]['profile_image']);
+  }
+
   @override
   void initState() {
-    super.initState();
     auth = LocalAuthentication();
+    _getAvailableBiometrics();
     auth.isDeviceSupported().then((bool isSupported) => setState(() {
           _supportState = isSupported;
         }));
+    // debugPrint(_supportState.toString());
+    _loadUserData();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MajuBasicAppBar(leadingSupport: true),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Container(
+          color: Palette.n0,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet<void>(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const BottomSheetOptions();
-                        });
-                  },
-                  child: const Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 32,
-                        backgroundImage:
-                            AssetImage('assets/images/profile.jpg'),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Icon(
-                          Icons.camera_alt,
-                          size: 16.0,
-                          color: Palette.n900,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 16.0,
-                ),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      "Yudas Iskariot",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Palette.n900),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet<void>(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            context: context,
+                            builder: (BuildContext context) {
+                              return BottomSheetOptions(
+                                  deleteImage: _deleteImage,
+                                  pickFromCamera: _pickImageFromCamera,
+                                  pickFromGallery: _pickImageFromGallery);
+                            });
+                      },
+                      child: Stack(
+                        children: [
+                          foundUser[0]['profile_image'] != null
+                              ? CircleAvatar(
+                                  radius: 32,
+                                  backgroundImage: MemoryImage(
+                                      foundUser[0]['profile_image']))
+                              : const CircleAvatar(
+                                  radius: 32,
+                                  backgroundImage:
+                                      AssetImage("assets/images/profile.jpg")),
+                          const Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 16.0,
+                              color: Palette.n900,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 8.0,
+                    const SizedBox(
+                      width: 16.0,
                     ),
-                    Text(
-                      "yudasiskariot@gmail.com",
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          color: Palette.n700),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          foundUser[0]['username'],
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Palette.n900),
+                        ),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        Text(
+                          foundUser[0]['email'],
+                          style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.normal,
+                              color: Palette.n700),
+                        )
+                      ],
                     )
                   ],
-                )
+                ),
+                const SizedBox(
+                  height: 32.0,
+                ),
+                PengaturanAkunTileView(
+                    onAuthenticate:
+                        _supportState ? _authenticate : _securityIsNotDefined),
+                const SizedBox(
+                  height: 32.0,
+                ),
+                const TransaksiTileView(),
+                const SizedBox(
+                  height: 32.0,
+                ),
+                const PusatBantuanTileView(),
               ],
             ),
-            const SizedBox(
-              height: 32.0,
-            ),
-            PengaturanAkunTileView(onAuthenticate: _authenticate),
-            const SizedBox(
-              height: 32.0,
-            ),
-            const TransaksiTileView(),
-            const SizedBox(
-              height: 32.0,
-            ),
-            const PusatBantuanTileView()
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> _securityIsNotDefined() async {
+    if (context.mounted) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const EditProfile()));
+    }
   }
 
   Future<void> _authenticate() async {
@@ -122,43 +181,97 @@ class _UserProfileState extends State<UserProfile> {
               stickyAuth: true, biometricOnly: false));
 
       if (authenticated) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const EditProfile()));
+        if (context.mounted) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const EditProfile()));
+        }
       }
     } on PlatformException catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
-  Future<void> _authenticateFaceID() async {
-  try {
-    bool authenticated = await auth.authenticate(
-        localizedReason: "Use Face ID for authentication",
-        options: const AuthenticationOptions(
-            stickyAuth: true, biometricOnly: true));
+  // Future<void> _authenticateFaceID() async {
+  //   try {
+  //     bool authenticated = await auth.authenticate(
+  //         localizedReason: "Use Face ID for authentication",
+  //         options: const AuthenticationOptions(
+  //             stickyAuth: true, biometricOnly: true));
 
-    if (authenticated) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const EditProfile()));
-    }
-  } on PlatformException catch (e) {
-    print(e);
-  }
-}
-  
-
-  // Future<void> _getAvailableBiometrics() async {
-  //   List<BiometricType> availableBiometrics =
-  //       await auth.getAvailableBiometrics();
-
-  //   print("List of availableBiometrics: $availableBiometrics");
-
-  //   if (!mounted) return;
-
-  //   setState(() {
-  //     _supportState = true;
-  //   });
+  //     if (authenticated) {
+  //       Navigator.push(context,
+  //           MaterialPageRoute(builder: (context) => const EditProfile()));
+  //     }
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //   }
   // }
+
+  Future<void> _getAvailableBiometrics() async {
+    List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+
+    debugPrint("List of availableBiometrics: $availableBiometrics");
+
+    if (!mounted) return;
+
+    setState(() {
+      _supportState = true;
+    });
+  }
+
+  Future<void> _deleteImage() async {
+    await SQLHelper.deleteProfileImage(foundUser[0]['id']);
+    await _loadUserData();
+  }
+
+  Future<void> _pickImageFromCamera() async {
+    final returnImage =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (returnImage == null) return;
+
+    final selectedImage = File(returnImage.path);
+    final imgFile = File(returnImage.path).readAsBytesSync();
+    final compressedImage = await compressImage(imgFile);
+
+    await updateProfileImageAndLoadData(selectedImage, compressedImage);
+  }
+
+  Future<void> _pickImageFromGallery() async {
+    final returnImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (returnImage == null) return;
+
+    final selectedImage = File(returnImage.path);
+    final imgFile = File(returnImage.path).readAsBytesSync();
+    final compressedImage = await compressImage(imgFile);
+
+    await updateProfileImageAndLoadData(selectedImage, compressedImage);
+  }
+
+  Future<void> updateProfileImageAndLoadData(
+      File selectedImage, Uint8List compressedImage) async {
+    await SQLHelper.updateProfileImage(foundUser[0]['id'], compressedImage);
+    await _loadUserData();
+
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<Uint8List> compressImage(Uint8List imageData,
+      {int quality = 70}) async {
+    final image = img.decodeImage(imageData);
+
+    if (image == null) {
+      return imageData;
+    }
+
+    final compressedImageData = img.encodeJpg(image, quality: quality);
+
+    return Uint8List.fromList(compressedImageData);
+  }
 }
 
 class PengaturanAkunTileView extends StatelessWidget {
@@ -209,6 +322,15 @@ class TransaksiTileView extends StatelessWidget {
       MajuBasicTile(
           icon: Icons.shopping_cart, title: "Keranjang", onTap: () {}),
       MajuBasicTile(
+          icon: Icons.attach_money,
+          title: "Traktir",
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const BarcodeScanner()));
+          }),
+      MajuBasicTile(
           icon: Icons.shopping_bag, title: "Riwayat Transaksi", onTap: () {}),
     ]);
   }
@@ -231,13 +353,25 @@ class PusatBantuanTileView extends StatelessWidget {
           height: 16.0,
         ),
         MajuBasicTile(icon: Icons.delete, title: "Hapus Akun", onTap: () {}),
+        MajuBasicTile(
+            icon: Icons.logout,
+            title: "Keluar",
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LoginView()));
+            }),
       ],
     );
   }
 }
 
 class BottomSheetOptions extends StatelessWidget {
-  const BottomSheetOptions({super.key});
+  const BottomSheetOptions(
+      {super.key,
+      required this.pickFromCamera,
+      required this.pickFromGallery,
+      required this.deleteImage});
+  final VoidCallback pickFromCamera, pickFromGallery, deleteImage;
 
   @override
   Widget build(BuildContext context) {
@@ -256,33 +390,35 @@ class BottomSheetOptions extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(Icons.close),
-                  ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  const Text(
-                    "Pilih Foto Profile",
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w600,
-                        color: Palette.n900),
-                  )
-                ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.close),
+                    SizedBox(
+                      width: 8.0,
+                    ),
+                    Text(
+                      "Pilih Foto Profile",
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600,
+                          color: Palette.n900),
+                    )
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 24.0,
               ),
               MajuBasicButton(
                   textButton: "Hapus Foto Profile",
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteImage();
+                  },
                   style: ButtonStyle(
                       shape: MaterialStatePropertyAll<OutlinedBorder>(
                         RoundedRectangleBorder(
@@ -302,8 +438,10 @@ class BottomSheetOptions extends StatelessWidget {
                 height: 8.0,
               ),
               MajuBasicButton(
-                textButton: "Ambil melalui Galery",
-                onPressed: () {},
+                textButton: "Ambil melalui Gallery",
+                onPressed: () {
+                  pickFromGallery();
+                },
                 style: ButtonStyle(
                     shape: MaterialStatePropertyAll<OutlinedBorder>(
                       RoundedRectangleBorder(
@@ -324,7 +462,10 @@ class BottomSheetOptions extends StatelessWidget {
                 height: 8.0,
               ),
               MajuBasicButton(
-                  textButton: "Ambil dengan Kamera", onPressed: () {}),
+                  textButton: "Ambil dengan Kamera",
+                  onPressed: () {
+                    pickFromCamera();
+                  }),
             ],
           ),
         ),

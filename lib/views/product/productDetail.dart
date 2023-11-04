@@ -295,42 +295,51 @@ class _ProductDetailState extends State<ProductDetail> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MajuBasicButton(
-                    textButton: "Beli Sekarang",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GenerateQRPage(
-                            productName: controllerProductName.text,
-                            price: double.parse(controllerPrice.text),
-                          ),
-                        ),
-                      );
-                    },
-                    btnWidth: 183,
-                    btnHeight: 40,
-                    style: ButtonStyle(
-                        shape: MaterialStatePropertyAll<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            side: const BorderSide(
-                              color: Palette.n900,
-                              width: 1.0,
+                Expanded(
+                  child: MajuBasicButton(
+                      textButton: "Beli Sekarang",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GenerateQRPage(
+                              productName: controllerProductName.text,
+                              price: double.parse(controllerPrice.text),
                             ),
                           ),
-                        ),
-                        elevation: const MaterialStatePropertyAll(0.0),
-                        backgroundColor:
-                            const MaterialStatePropertyAll<Color>(Colors.white),
-                        foregroundColor: const MaterialStatePropertyAll<Color>(
-                            Palette.n900))),
-                MajuBasicButton(
-                  textButton: "Tambah ke Keranjang",
-                  onPressed: () {},
-                  btnWidth: 183,
-                  btnHeight: 40,
+                        );
+                      },
+                      // btnWidth: 183,
+                      btnHeight: 40,
+                      style: ButtonStyle(
+                          shape: MaterialStatePropertyAll<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: const BorderSide(
+                                color: Palette.n900,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          elevation: const MaterialStatePropertyAll(0.0),
+                          backgroundColor:
+                              const MaterialStatePropertyAll<Color>(
+                                  Colors.white),
+                          foregroundColor:
+                              const MaterialStatePropertyAll<Color>(
+                                  Palette.n900))),
                 ),
+                const SizedBox(
+                  width: 16.0,
+                ),
+                Expanded(
+                  child: MajuBasicButton(
+                    textButton: "Keranjang",
+                    onPressed: () {},
+                    // btnWidth: 183,
+                    btnHeight: 40,
+                  ),
+                )
               ],
             ),
           ),

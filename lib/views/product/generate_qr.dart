@@ -36,8 +36,8 @@ class GenerateQRPage extends StatelessWidget {
                 data: qrData,
                 version: QrVersions.auto,
                 size: 400,
-                embeddedImage: NetworkImage(
-                    "https://i.pinimg.com/736x/ed/a9/aa/eda9aabed661a98d62c5df2df6879258.jpg"),
+                // embeddedImage: NetworkImage(
+                //     "https://i.pinimg.com/736x/ed/a9/aa/eda9aabed661a98d62c5df2df6879258.jpg"),
               ),
               SizedBox(height: 20),
               // ElevatedButton(

@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
@@ -23,7 +21,6 @@ class _ProfileViewState extends State<ProfileView> {
   TextEditingController? _phoneNumberController;
   TextEditingController? _addressController;
   int? id;
-  
 
   void _onItemTapped(int index) {
     setState(() {
@@ -88,31 +85,31 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Future<void> _ambilGambarDariKamera() async {
-  final picker = ImagePicker();
-  final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.camera);
 
-  if (pickedFile != null) {
-    final imagePath = pickedFile.path;
-    await SQLHelper.updateProfileImage(id!, imagePath);
+    if (pickedFile != null) {
+      final imagePath = pickedFile.path;
+      // await SQLHelper.updateProfileImage(id!, imagePath);
 
-    // Update gambar profil di SharedPreferences
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('account', [
-      id.toString(),
-      _emailController!.text,
-      _nameController!.text,
-      _phoneNumberController!.text,
-      _addressController!.text,
-      imagePath, // Menambah path gambar ke SharedPreferences
-    ]);
+      // Update gambar profil di SharedPreferences
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setStringList('account', [
+        id.toString(),
+        _emailController!.text,
+        _nameController!.text,
+        _phoneNumberController!.text,
+        _addressController!.text,
+        imagePath, // Menambah path gambar ke SharedPreferences
+      ]);
 
-    setState(() {
-      // Perbarui tampilan gambar profil
-      _profileImagePath = imagePath;
-    });
+      setState(() {
+        // Perbarui tampilan gambar profil
+        _profileImagePath = imagePath;
+      });
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +123,7 @@ class _ProfileViewState extends State<ProfileView> {
           children: [
             const CircleAvatar(
               radius: 50,
-              // backgroundImage: _profileImagePath.isNotEmpty ? 
+              // backgroundImage: _profileImagePath.isNotEmpty ?
               // FileImage(File(_profileImagePath)): const AssetImage('assets/images/profile.jpg') as ImageProvider,
             ),
             const SizedBox(height: 16),
