@@ -24,7 +24,50 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
     }
   }
 
-  //@Natasya kerja dibawah sini ya
+  Future<void> setBrightness(double brightness) async {
+    try {
+      await ScreenBrightness().setScreenBrightness(brightness);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw 'Failed to set brightness';
+    }
+  }
+
+  Future<double> getBrightness() async {
+    try {
+      return await ScreenBrightness().current;
+    } catch (e) {
+      debugPrint(e.toString());
+      throw 'Failed to get brightness';
+    }
+  }
+
+  Future<void> setBrightnessToMax() async {
+    await setBrightness(1.0);
+  }
+
+  Future<void> returnBrightness() async {
+    await setBrightness(currentBrightness);
+  }
+
+  @override
+  void initState() {
+    debugPrint("=====================${currentBrightness.toString()}");
+    getBrightness().then((brightness) {
+      setState(() {
+        currentBrightness = brightness;
+      });
+    });
+    setBrightnessToMax();
+    super.initState();
+    debugPrint("=====================${currentBrightness.toString()}");
+  }
+
+  @override
+  void dispose() {
+    resetBrightness();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
