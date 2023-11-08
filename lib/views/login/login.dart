@@ -6,6 +6,7 @@ import 'package:maju/views/home/home.dart';
 import 'package:maju/views/login/register.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class LoginView extends StatefulWidget {
   // const LoginView({super.key});
@@ -79,21 +80,19 @@ class _LoginViewState extends State<LoginView> {
               Text(
                 "Welcome to Maju",
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                    fontSize: 36.0,
+                    fontSize: 36.0.px,
                     color: Palette.n900,
                     fontWeight: FontWeight.w500),
               ),
-              const SizedBox(
-                height: 8,
+              SizedBox(
+                height: 8.px,
               ),
               Text(
                   "Lorem ipsum dolor sit amet consectetur. In magnis adipiscing suspendisse risus eget elit dolor.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(fontSize: 12.0, fontWeight: FontWeight.normal)),
-              const SizedBox(
-                height: 40,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontSize: 12.0.px, fontWeight: FontWeight.normal)),
+              SizedBox(
+                height: 40.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -138,6 +137,9 @@ class _LoginViewState extends State<LoginView> {
                   // Navigator.of(context).push(HomeView.route());
                   onLoginTaped();
                 },
+              ),
+              const SizedBox(
+                height: 64,
               ),
             ],
           ),

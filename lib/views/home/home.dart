@@ -20,7 +20,7 @@ import 'package:maju/views/product/products.dart';
 // import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:maju/views/profile/user_profile.dart';
 
 class HomeView extends StatefulWidget {
@@ -492,7 +492,7 @@ class _MajuGridProductState extends State<MajuGridProduct> {
                           fontWeight: FontWeight.w400,
                         ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 4,
                   ),
                   Text(
@@ -503,7 +503,7 @@ class _MajuGridProductState extends State<MajuGridProduct> {
                           fontWeight: FontWeight.w700,
                         ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Row(
