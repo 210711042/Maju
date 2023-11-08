@@ -303,6 +303,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => GenerateQRPage(
+                              id: widget.id!,
                               productName: controllerProductName.text,
                               price: double.parse(controllerPrice.text),
                             ),

@@ -3,22 +3,24 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:maju/views/home/home.dart';
 
 class GenerateQRPage extends StatelessWidget {
+  final int id;
   final String productName;
   final double price;
 
   GenerateQRPage({
+    required this.id,
     required this.productName,
     required this.price,
   });
 
   @override
   Widget build(BuildContext context) {
-    final qrData = 'Product: $productName, Price: $price';
+    final qrData = '$id';
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text('QR Generate'),
+        title: const Text('QR Generate'),
       ),
       body: Center(
         child: Padding(
@@ -26,11 +28,11 @@ class GenerateQRPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Silahkan lakukan pembayaran dengan menscan QR di bawah ini",
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               QrImageView(
                 data: qrData,
@@ -39,7 +41,7 @@ class GenerateQRPage extends StatelessWidget {
                 // embeddedImage: NetworkImage(
                 //     "https://i.pinimg.com/736x/ed/a9/aa/eda9aabed661a98d62c5df2df6879258.jpg"),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // ElevatedButton(
               //   onPressed: () {
               //     Navigator.push(context, MaterialPageRoute(builder: (context) => HomeView()));
