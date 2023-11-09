@@ -13,6 +13,7 @@ import 'package:maju/views/profile/edit_profile.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:maju/views/qr_scanner/scan_qr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:image/image.dart' as img;
 
 File? shownImage;
@@ -59,7 +60,6 @@ class _UserProfileState extends State<UserProfile> {
     auth.isDeviceSupported().then((bool isSupported) => setState(() {
           _supportState = isSupported;
         }));
-    // debugPrint(_supportState.toString());
     _loadUserData();
     super.initState();
   }
@@ -67,15 +67,14 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MajuBasicAppBar(leadingSupport: true),
+      appBar: MajuBasicAppBar(leadingSupport: true),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
           color: Palette.n0,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.px),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -84,7 +83,7 @@ class _UserProfileState extends State<UserProfile> {
                       onTap: () {
                         showModalBottomSheet<void>(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0),
+                              borderRadius: BorderRadius.circular(16.0.px),
                             ),
                             context: context,
                             builder: (BuildContext context) {
@@ -98,45 +97,45 @@ class _UserProfileState extends State<UserProfile> {
                         children: [
                           foundUser[0]['profile_image'] != null
                               ? CircleAvatar(
-                                  radius: 32,
+                                  radius: 48.px,
                                   backgroundImage: MemoryImage(
                                       foundUser[0]['profile_image']))
-                              : const CircleAvatar(
-                                  radius: 32,
+                              : CircleAvatar(
+                                  radius: 48.px,
                                   backgroundImage:
                                       AssetImage("assets/images/profile.jpg")),
-                          const Positioned(
-                            bottom: 0,
-                            right: 0,
+                          Positioned(
+                            bottom: 0.px,
+                            right: 0.px,
                             child: Icon(
                               Icons.camera_alt,
-                              size: 16.0,
+                              size: 16.0.px,
                               color: Palette.n900,
                             ),
                           )
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      width: 16.0,
+                    SizedBox(
+                      width: 16.0.px,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           foundUser[0]['username'],
-                          style: const TextStyle(
-                              fontSize: 20,
+                          style: TextStyle(
+                              fontSize: 20.px,
                               fontWeight: FontWeight.bold,
                               color: Palette.n900),
                         ),
-                        const SizedBox(
-                          height: 8.0,
+                        SizedBox(
+                          height: 8.0.px,
                         ),
                         Text(
                           foundUser[0]['email'],
-                          style: const TextStyle(
-                              fontSize: 16.0,
+                          style: TextStyle(
+                              fontSize: 16.0.px,
                               fontWeight: FontWeight.normal,
                               color: Palette.n700),
                         )
@@ -144,20 +143,20 @@ class _UserProfileState extends State<UserProfile> {
                     )
                   ],
                 ),
-                const SizedBox(
-                  height: 32.0,
+                SizedBox(
+                  height: 32.0.px,
                 ),
                 PengaturanAkunTileView(
                     onAuthenticate:
                         _supportState ? _authenticate : _securityIsNotDefined),
-                const SizedBox(
-                  height: 32.0,
+                SizedBox(
+                  height: 32.0.px,
                 ),
-                const TransaksiTileView(),
-                const SizedBox(
-                  height: 32.0,
+                TransaksiTileView(),
+                SizedBox(
+                  height: 32.0.px,
                 ),
-                const PusatBantuanTileView(),
+                PusatBantuanTileView(),
               ],
             ),
           ),
@@ -190,22 +189,6 @@ class _UserProfileState extends State<UserProfile> {
       debugPrint(e.toString());
     }
   }
-
-  // Future<void> _authenticateFaceID() async {
-  //   try {
-  //     bool authenticated = await auth.authenticate(
-  //         localizedReason: "Use Face ID for authentication",
-  //         options: const AuthenticationOptions(
-  //             stickyAuth: true, biometricOnly: true));
-
-  //     if (authenticated) {
-  //       Navigator.push(context,
-  //           MaterialPageRoute(builder: (context) => const EditProfile()));
-  //     }
-  //   } on PlatformException catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   Future<void> _getAvailableBiometrics() async {
     List<BiometricType> availableBiometrics =
@@ -283,13 +266,13 @@ class PengaturanAkunTileView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Pengaturan Akun",
           style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w600, color: Palette.n900),
+              fontSize: 16.px, fontWeight: FontWeight.w600, color: Palette.n900),
         ),
-        const SizedBox(
-          height: 16.0,
+        SizedBox(
+          height: 16.0.px,
         ),
         MajuBasicTile(
             icon: Icons.person,
@@ -311,13 +294,13 @@ class TransaksiTileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text(
+      Text(
         "Transaksi",
         style: TextStyle(
-            fontSize: 16, fontWeight: FontWeight.w600, color: Palette.n900),
+            fontSize: 16.px, fontWeight: FontWeight.w600, color: Palette.n900),
       ),
-      const SizedBox(
-        height: 16.0,
+      SizedBox(
+        height: 16.0.px,
       ),
       MajuBasicTile(
           icon: Icons.shopping_cart, title: "Keranjang", onTap: () {}),
@@ -344,13 +327,13 @@ class PusatBantuanTileView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Pusat Bantuan",
           style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w600, color: Palette.n900),
+              fontSize: 16.px, fontWeight: FontWeight.w600, color: Palette.n900),
         ),
-        const SizedBox(
-          height: 16.0,
+        SizedBox(
+          height: 16.0.px,
         ),
         MajuBasicTile(icon: Icons.delete, title: "Hapus Akun", onTap: () {}),
         MajuBasicTile(
@@ -376,43 +359,41 @@ class BottomSheetOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 264,
+      height: 264.px,
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             color: Palette.n0,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0))),
-        // color: Colors.white,
+                topLeft: Radius.circular(16.0.px),
+                topRight: Radius.circular(16.0.px))),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0.px),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();
                 },
-                child: const Row(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(Icons.close),
                     SizedBox(
-                      width: 8.0,
+                      width: 8.0.px,
                     ),
                     Text(
                       "Pilih Foto Profile",
                       style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 20.0.px,
                           fontWeight: FontWeight.w600,
                           color: Palette.n900),
                     )
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 24.0,
+              SizedBox(
+                height: 24.0.px,
               ),
               MajuBasicButton(
                   textButton: "Hapus Foto Profile",
@@ -422,20 +403,20 @@ class BottomSheetOptions extends StatelessWidget {
                   style: ButtonStyle(
                       shape: MaterialStatePropertyAll<OutlinedBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          side: const BorderSide(
+                          borderRadius: BorderRadius.circular(8.0.px),
+                          side: BorderSide(
                             color: Palette.n900,
-                            width: 1.0,
+                            width: 1.0.px,
                           ),
                         ),
                       ),
-                      elevation: const MaterialStatePropertyAll(0.0),
+                      elevation: MaterialStatePropertyAll(0.0.px),
                       backgroundColor:
-                          const MaterialStatePropertyAll<Color>(Colors.white),
+                          MaterialStatePropertyAll<Color>(Colors.white),
                       foregroundColor:
-                          const MaterialStatePropertyAll<Color>(Palette.n900))),
-              const SizedBox(
-                height: 8.0,
+                          MaterialStatePropertyAll<Color>(Palette.n900))),
+              SizedBox(
+                height: 8.0.px,
               ),
               MajuBasicButton(
                 textButton: "Ambil melalui Gallery",
@@ -445,21 +426,21 @@ class BottomSheetOptions extends StatelessWidget {
                 style: ButtonStyle(
                     shape: MaterialStatePropertyAll<OutlinedBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        side: const BorderSide(
+                        borderRadius: BorderRadius.circular(8.0.px),
+                        side: BorderSide(
                           color: Palette.n900,
-                          width: 1.0,
+                          width: 1.0.px,
                         ),
                       ),
                     ),
-                    elevation: const MaterialStatePropertyAll(0.0),
+                    elevation: MaterialStatePropertyAll(0.0.px),
                     backgroundColor:
-                        const MaterialStatePropertyAll<Color>(Colors.white),
+                        MaterialStatePropertyAll<Color>(Colors.white),
                     foregroundColor:
-                        const MaterialStatePropertyAll<Color>(Palette.n900)),
+                        MaterialStatePropertyAll<Color>(Palette.n900)),
               ),
-              const SizedBox(
-                height: 8.0,
+              SizedBox(
+                height: 8.0.px,
               ),
               MajuBasicButton(
                   textButton: "Ambil dengan Kamera",
