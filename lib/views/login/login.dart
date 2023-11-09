@@ -9,11 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class LoginView extends StatefulWidget {
-  // const LoginView({super.key});
-
-  // static route() => MaterialPageRoute(builder: (context) => const LoginView());
-
-  const LoginView({super.key});
+  const LoginView({Key? key});
 
   static Route<dynamic> route() =>
       MaterialPageRoute(builder: (context) => const LoginView());
@@ -28,9 +24,6 @@ class _LoginViewState extends State<LoginView> {
 
   bool _isSecurePassword = true;
 
-  // String _email = '';
-  // String _password = '';
-
   void onLoginTaped() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final isAuthenticated =
@@ -38,12 +31,12 @@ class _LoginViewState extends State<LoginView> {
 
     if (isAuthenticated.isNotEmpty) {
       Fluttertoast.showToast(
-        msg: "Selamat Data di MarketMaju!",
+        msg: "Selamat Datang di MarketMaju!",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
         backgroundColor: const Color.fromARGB(255, 91, 202, 95),
         textColor: Colors.white,
-        fontSize: 19.0,
+        fontSize: 19.0.px,
       );
       await prefs.setStringList('account', <String>[
         isAuthenticated[0]['id'].toString(),
@@ -51,19 +44,17 @@ class _LoginViewState extends State<LoginView> {
         isAuthenticated[0]['username'],
         isAuthenticated[0]['phone'],
         isAuthenticated[0]['address'],
-        // isAuthenticated[0]['profile_image']
       ]);
-      // Autentikasi berhasil, arahkan ke halaman beranda atau tindakan selanjutnya
+
       if (context.mounted) Navigator.of(context).push(HomeView.route());
     } else {
-      // Autentikasi gagal, tampilkan pesan kesalahan
       Fluttertoast.showToast(
         msg: "Email atau Password salah",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
         backgroundColor: const Color.fromARGB(255, 255, 0, 0),
         textColor: Colors.white,
-        fontSize: 19.0,
+        fontSize: 19.0.px,
       );
     }
   }
@@ -73,7 +64,10 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 100),
+          padding: EdgeInsets.symmetric(
+            horizontal: 25.5.px,
+            vertical: 50.5.px,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -85,22 +79,26 @@ class _LoginViewState extends State<LoginView> {
                     fontWeight: FontWeight.w500),
               ),
               SizedBox(
-                height: 8.px,
+                height: 8.0.px,
               ),
               Text(
                   "Lorem ipsum dolor sit amet consectetur. In magnis adipiscing suspendisse risus eget elit dolor.",
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      fontSize: 12.0.px, fontWeight: FontWeight.normal)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: 12.0.px, fontWeight: FontWeight.normal)),
               SizedBox(
-                height: 40.px,
+                height: 40.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: _emailController, // Hubungkan controller
+                controller: _emailController,
                 decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0))),
+                  labelText: 'Email',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6.1.px),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Username tidak boleh kosong';
@@ -108,17 +106,18 @@ class _LoginViewState extends State<LoginView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 16,
+              SizedBox(
+                height: 10.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: _passwordController, // Hubungkan controller
+                controller: _passwordController,
                 obscureText: _isSecurePassword,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(6.1.px),
+                  ),
                   suffixIcon: togglePassword(),
                 ),
                 validator: (value) {
@@ -128,13 +127,12 @@ class _LoginViewState extends State<LoginView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 24,
+              SizedBox(
+                height: 20.0.px,
               ),
               MajuBasicButton(
                 textButton: "Sign in",
                 onPressed: () {
-                  // Navigator.of(context).push(HomeView.route());
                   onLoginTaped();
                 },
               ),
@@ -146,31 +144,34 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       bottomNavigationBar: Padding(
-          padding: const EdgeInsets.only(bottom: 32.0),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(RegisterView.route());
-            },
-            child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Don't have any account? ",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall!
-                          .copyWith(color: Palette.n400),
-                    ),
-                    TextSpan(
-                      text: "Sign up",
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Palette.n900,
-                          decoration: TextDecoration.underline),
-                    ),
-                  ],
-                )),
-          )),
+        padding: EdgeInsets.only(bottom: 40.5.px),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(RegisterView.route());
+          },
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "Don't have any account? ",
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: Palette.n400),
+                ),
+                TextSpan(
+                  text: "Sign up",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: Palette.n900,
+                        decoration: TextDecoration.underline,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 

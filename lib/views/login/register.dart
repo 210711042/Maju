@@ -4,6 +4,7 @@ import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/login/login.dart';
 import 'package:maju/data/sql_helper.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView(
@@ -53,7 +54,7 @@ class _RegisterViewState extends State<RegisterView> {
               gravity: ToastGravity.TOP,
               backgroundColor: Color.fromARGB(255, 91, 202, 95),
               textColor: Colors.white,
-              fontSize: 19.0,
+              fontSize: 19.0.px,
             );
             Navigator.of(context).push(LoginView.route());
           },
@@ -85,29 +86,32 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 100.0, right: 16.0, left: 16.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: 25.5.px,
+            vertical: 50.5.px,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 "Create your account",
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                    fontSize: 36.0,
+                    fontSize: 36.0.px,
                     color: Palette.n900,
                     fontWeight: FontWeight.w500),
               ),
-              const SizedBox(
-                height: 8,
+              SizedBox(
+                height: 8.0.px,
               ),
               Text(
                 "Lorem ipsum dolor sit amet consectetur. In magnis adipiscing suspendisse risus eget elit dolor.",
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge!
-                    .copyWith(fontSize: 12.0, fontWeight: FontWeight.normal),
+                    .copyWith(fontSize: 12.0.px, fontWeight: FontWeight.normal),
               ),
-              const SizedBox(
-                height: 32,
+              SizedBox(
+                height: 32.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -126,8 +130,8 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 16,
+              SizedBox(
+                height: 16.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -135,7 +139,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0))),
+                        borderRadius: BorderRadius.circular(8.0.px))),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Email tidak boleh kosong';
@@ -149,8 +153,8 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 16,
+              SizedBox(
+                height: 16.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -159,7 +163,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8.0.px),
                   ),
                   suffixIcon: togglePassword(),
                 ),
@@ -173,8 +177,8 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 16,
+              SizedBox(
+                height: 16.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -183,7 +187,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: InputDecoration(
                   labelText: 'Re-Enter Password',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8.0.px),
                   ),
                   suffixIcon: IconButton(
                     onPressed: () {
@@ -210,8 +214,8 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 16,
+              SizedBox(
+                height: 16.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -219,7 +223,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: InputDecoration(
                     labelText: 'No.Telepon',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0))),
+                        borderRadius: BorderRadius.circular(8.0.px))),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Nomor Telepon tidak boleh kosong';
@@ -230,8 +234,8 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 16,
+              SizedBox(
+                height: 16.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -239,7 +243,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: InputDecoration(
                     labelText: 'Alamat',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0))),
+                        borderRadius: BorderRadius.circular(8.0.px))),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Alamat tidak boleh kosong';
@@ -250,8 +254,8 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 24,
+              SizedBox(
+                height: 24.0.px,
               ),
               MajuBasicButton(
                 textButton: "Sign up",
@@ -270,7 +274,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 32.0),
+        padding: EdgeInsets.only(bottom: 32.0.px),
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(LoginView.route());
