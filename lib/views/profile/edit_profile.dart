@@ -3,6 +3,7 @@ import 'package:maju/core/widgets/UI/maju_basic_appbar.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/core/widgets/maju_basic_input.dart';
 import 'package:maju/themes/palette.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -18,32 +19,32 @@ class _EditProfileState extends State<EditProfile> {
       appBar: const MajuBasicAppBar(
         leadingSupport: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0.px),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+             Row(
               children: [
                 Stack(
                   children: [
                     CircleAvatar(
-                      radius: 32,
+                      radius: 32.px,
                       backgroundImage: AssetImage('assets/images/profile.jpg'),
                     ),
                     Positioned(
-                      bottom: 0,
-                      right: 0,
+                      bottom: 0.px,
+                      right: 0.px,
                       child: Icon(
                         Icons.camera_alt,
-                        size: 16.0,
+                        size: 16.0.px,
                         color: Palette.n900,
                       ),
                     )
                   ],
                 ),
                 SizedBox(
-                  width: 16.0,
+                  width: 16.0.px,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,17 +52,17 @@ class _EditProfileState extends State<EditProfile> {
                     Text(
                       "Yudas Iskariot",
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 20.px,
                           fontWeight: FontWeight.bold,
                           color: Palette.n900),
                     ),
                     SizedBox(
-                      height: 8.0,
+                      height: 8.0.px,
                     ),
                     Text(
                       "yudasiskariot@gmail.com",
                       style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: 16.0.px,
                           fontWeight: FontWeight.normal,
                           color: Palette.n700),
                     )
@@ -69,16 +70,16 @@ class _EditProfileState extends State<EditProfile> {
                 )
               ],
             ),
-            const SizedBox(
-              height: 32.0,
+             SizedBox(
+              height: 32.0.px,
             ),
             MajuBasicInput(
               hintText: "Nama Lengkap",
               labelText: "Nama Lengkap",
               controller: TextEditingController(text: "Yudas Iskariot"),
             ),
-            const SizedBox(
-              height: 8.0,
+             SizedBox(
+              height: 8.0.px,
             ),
             MajuBasicInput(
               hintText: "Email",
@@ -86,22 +87,22 @@ class _EditProfileState extends State<EditProfile> {
               controller:
                   TextEditingController(text: "yudasiskariot@gmail.com"),
             ),
-            const SizedBox(
-              height: 8.0,
+             SizedBox(
+              height: 8.0.px,
             ),
             const MajuBasicInput(
               hintText: "Nomor Telepon",
               labelText: "Nomor Telepon",
             ),
-            const SizedBox(
-              height: 8.0,
+             SizedBox(
+              height: 8.0.px,
             ),
             const MajuBasicInput(
               hintText: "Alamat",
               labelText: "Alamat",
             ),
-            const SizedBox(
-              height: 32.0,
+             SizedBox(
+              height: 32.0.px,
             ),
             MajuBasicButton(textButton: "Simpan", onPressed: () {})
           ],
