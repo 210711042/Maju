@@ -66,103 +66,106 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MajuBasicAppBar(leadingSupport: true),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          color: Palette.n0,
-          child: Padding(
-            padding: EdgeInsets.all(16.0.px),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet<void>(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0.px),
-                            ),
-                            context: context,
-                            builder: (BuildContext context) {
-                              return BottomSheetOptions(
-                                  deleteImage: _deleteImage,
-                                  pickFromCamera: _pickImageFromCamera,
-                                  pickFromGallery: _pickImageFromGallery);
-                            });
-                      },
-                      child: Stack(
+    return ResponsiveSizer(builder: (context, orientation, ScreenType) {
+      return Scaffold(
+        appBar: const MajuBasicAppBar(leadingSupport: true),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Container(
+            color: Palette.n0,
+            child: Padding(
+              padding: EdgeInsets.all(16.0.px),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet<void>(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16.0.px),
+                              ),
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BottomSheetOptions(
+                                    deleteImage: _deleteImage,
+                                    pickFromCamera: _pickImageFromCamera,
+                                    pickFromGallery: _pickImageFromGallery);
+                              });
+                        },
+                        child: Stack(
+                          children: [
+                            foundUser[0]['profile_image'] != null
+                                ? CircleAvatar(
+                                    radius: 48.px,
+                                    backgroundImage: MemoryImage(
+                                        foundUser[0]['profile_image']))
+                                : CircleAvatar(
+                                    radius: 48.px,
+                                    backgroundImage: AssetImage(
+                                        "assets/images/profile.jpg")),
+                            Positioned(
+                              bottom: 0.px,
+                              right: 0.px,
+                              child: Icon(
+                                Icons.camera_alt,
+                                size: 16.0.px,
+                                color: Palette.n900,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.0.px,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          foundUser[0]['profile_image'] != null
-                              ? CircleAvatar(
-                                  radius: 48.px,
-                                  backgroundImage: MemoryImage(
-                                      foundUser[0]['profile_image']))
-                              : CircleAvatar(
-                                  radius: 48.px,
-                                  backgroundImage:
-                                      AssetImage("assets/images/profile.jpg")),
-                          Positioned(
-                            bottom: 0.px,
-                            right: 0.px,
-                            child: Icon(
-                              Icons.camera_alt,
-                              size: 16.0.px,
-                              color: Palette.n900,
-                            ),
+                          Text(
+                            foundUser[0]['username'],
+                            style: TextStyle(
+                                fontSize: 20.px,
+                                fontWeight: FontWeight.bold,
+                                color: Palette.n900),
+                          ),
+                          SizedBox(
+                            height: 8.0.px,
+                          ),
+                          Text(
+                            foundUser[0]['email'],
+                            style: TextStyle(
+                                fontSize: 16.0.px,
+                                fontWeight: FontWeight.normal,
+                                color: Palette.n700),
                           )
                         ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 16.0.px,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          foundUser[0]['username'],
-                          style: TextStyle(
-                              fontSize: 20.px,
-                              fontWeight: FontWeight.bold,
-                              color: Palette.n900),
-                        ),
-                        SizedBox(
-                          height: 8.0.px,
-                        ),
-                        Text(
-                          foundUser[0]['email'],
-                          style: TextStyle(
-                              fontSize: 16.0.px,
-                              fontWeight: FontWeight.normal,
-                              color: Palette.n700),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 32.0.px,
-                ),
-                PengaturanAkunTileView(
-                    onAuthenticate:
-                        _supportState ? _authenticate : _securityIsNotDefined),
-                SizedBox(
-                  height: 32.0.px,
-                ),
-                TransaksiTileView(),
-                SizedBox(
-                  height: 32.0.px,
-                ),
-                PusatBantuanTileView(),
-              ],
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 32.0.px,
+                  ),
+                  PengaturanAkunTileView(
+                      onAuthenticate: _supportState
+                          ? _authenticate
+                          : _securityIsNotDefined),
+                  SizedBox(
+                    height: 32.0.px,
+                  ),
+                  TransaksiTileView(),
+                  SizedBox(
+                    height: 32.0.px,
+                  ),
+                  PusatBantuanTileView(),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Future<void> _securityIsNotDefined() async {
@@ -269,7 +272,9 @@ class PengaturanAkunTileView extends StatelessWidget {
         Text(
           "Pengaturan Akun",
           style: TextStyle(
-              fontSize: 16.px, fontWeight: FontWeight.w600, color: Palette.n900),
+              fontSize: 16.px,
+              fontWeight: FontWeight.w600,
+              color: Palette.n900),
         ),
         SizedBox(
           height: 16.0.px,
@@ -330,7 +335,9 @@ class PusatBantuanTileView extends StatelessWidget {
         Text(
           "Pusat Bantuan",
           style: TextStyle(
-              fontSize: 16.px, fontWeight: FontWeight.w600, color: Palette.n900),
+              fontSize: 16.px,
+              fontWeight: FontWeight.w600,
+              color: Palette.n900),
         ),
         SizedBox(
           height: 16.0.px,
@@ -359,7 +366,7 @@ class BottomSheetOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 264.px,
+      height: Device.orientation == Orientation.portrait ? 264.0.px : 400.0.px,
       child: Container(
         decoration: BoxDecoration(
             color: Palette.n0,
@@ -378,7 +385,7 @@ class BottomSheetOptions extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.close),
+                    const Icon(Icons.close),
                     SizedBox(
                       width: 8.0.px,
                     ),
@@ -412,9 +419,9 @@ class BottomSheetOptions extends StatelessWidget {
                       ),
                       elevation: MaterialStatePropertyAll(0.0.px),
                       backgroundColor:
-                          MaterialStatePropertyAll<Color>(Colors.white),
+                          const MaterialStatePropertyAll<Color>(Colors.white),
                       foregroundColor:
-                          MaterialStatePropertyAll<Color>(Palette.n900))),
+                          const MaterialStatePropertyAll<Color>(Palette.n900))),
               SizedBox(
                 height: 8.0.px,
               ),
@@ -435,9 +442,9 @@ class BottomSheetOptions extends StatelessWidget {
                     ),
                     elevation: MaterialStatePropertyAll(0.0.px),
                     backgroundColor:
-                        MaterialStatePropertyAll<Color>(Colors.white),
+                        const MaterialStatePropertyAll<Color>(Colors.white),
                     foregroundColor:
-                        MaterialStatePropertyAll<Color>(Palette.n900)),
+                        const MaterialStatePropertyAll<Color>(Palette.n900)),
               ),
               SizedBox(
                 height: 8.0.px,

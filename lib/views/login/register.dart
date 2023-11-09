@@ -40,11 +40,11 @@ class _RegisterViewState extends State<RegisterView> {
 
   void showAlertDialog(BuildContext context) {
     AlertDialog alertDialog = AlertDialog(
-      title: Text('Perhatian!'),
-      content: Text('Sudah Yakin Dengan Datamu?'),
+      title: const Text('Perhatian!'),
+      content: const Text('Sudah Yakin Dengan Datamu?'),
       actions: <Widget>[
         TextButton(
-          child: Text('OK'),
+          child: const Text('OK'),
           onPressed: () async {
             await addUser();
 
@@ -52,11 +52,11 @@ class _RegisterViewState extends State<RegisterView> {
               msg: "Berhasil Melakukan Registrasi!",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.TOP,
-              backgroundColor: Color.fromARGB(255, 91, 202, 95),
+              backgroundColor: const Color.fromARGB(255, 91, 202, 95),
               textColor: Colors.white,
               fontSize: 19.0.px,
             );
-            Navigator.of(context).push(LoginView.route());
+            if (mounted) Navigator.of(context).push(LoginView.route());
           },
         ),
         TextButton(
@@ -265,7 +265,7 @@ class _RegisterViewState extends State<RegisterView> {
                   setState(() {});
 
                   if (validateForm() && !isEmailUsed) {
-                    showAlertDialog(context);
+                    if (mounted) showAlertDialog(context);
                   }
                 },
               ),

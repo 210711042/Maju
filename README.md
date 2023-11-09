@@ -35,6 +35,14 @@ Aplikasi E-commerce Maju (Marketmaju) berbentuk market place yang dapat membantu
 - Nicodemus: Generate QR Code
 - Abraham: Fingerprint sensor
 
+## Features UGD 10 | Library
+
+- Natasya: Responsive profile view, UUID
+- Natalia: Responsive Login Register, UUID
+- Gratia: Responsive, UUID
+- Nicodemus: Responsive User_profile, success_payment, Image picker, Generate PDF
+- Abraham: Generate PDF, Image Picker, Responsive all view left
+
 ## Tech Stack
 
 **Client:** Flutter

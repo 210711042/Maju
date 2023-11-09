@@ -20,7 +20,7 @@ class GenerateQRPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('QR Generate'),
+        title: Text('QR Generate $id'),
       ),
       body: Center(
         child: Padding(

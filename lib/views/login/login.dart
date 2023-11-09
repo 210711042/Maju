@@ -64,10 +64,12 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 25.5.px,
-            vertical: 50.5.px,
-          ),
+          padding: EdgeInsets.only(
+              // horizontal: 25.5.px,
+              // vertical: 50.5.px,
+              top: 100.0.px,
+              right: 16.0.px,
+              left: 16.0.px),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,10 +85,8 @@ class _LoginViewState extends State<LoginView> {
               ),
               Text(
                   "Lorem ipsum dolor sit amet consectetur. In magnis adipiscing suspendisse risus eget elit dolor.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(fontSize: 12.0.px, fontWeight: FontWeight.normal)),
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontSize: 12.0.px, fontWeight: FontWeight.normal)),
               SizedBox(
                 height: 40.0.px,
               ),
@@ -96,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6.1.px),
+                    borderRadius: BorderRadius.circular(4.0.px),
                   ),
                 ),
                 validator: (value) {
@@ -116,7 +116,7 @@ class _LoginViewState extends State<LoginView> {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6.1.px),
+                    borderRadius: BorderRadius.circular(4.0.px),
                   ),
                   suffixIcon: togglePassword(),
                 ),
@@ -144,7 +144,7 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(bottom: 40.5.px),
+        padding: EdgeInsets.only(bottom: 32.px),
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(RegisterView.route());
