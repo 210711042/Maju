@@ -11,6 +11,7 @@ import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
 import 'package:maju/views/pdf/pdf_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:uuid/uuid.dart';
 
 class SuccessPayment extends StatefulWidget {
@@ -92,17 +93,17 @@ class _SuccessPaymentState extends State<SuccessPayment> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Pembayaran berhasil",
                 style: TextStyle(
-                    fontSize: 28.0,
+                    fontSize: 28.0.px,
                     fontWeight: FontWeight.w600,
                     color: Palette.g400),
               ),
               // LottieBuilder.asset('assets/lottie/success.json')
               Lottie.asset('assets/lottie/success.json'),
-              const SizedBox(
-                height: 32.0,
+              SizedBox(
+                height: 32.0.px,
               ),
               MajuBasicButton(
                 textButton: "Kembali",
@@ -113,22 +114,22 @@ class _SuccessPaymentState extends State<SuccessPayment> {
                           builder: (context) => const HomeView()));
                 },
               ),
-              const SizedBox(
-                height: 16.0,
+              SizedBox(
+                height: 16.0.px,
               ),
               MajuBasicButton(
                 textButton: "Cetak Invoice",
                 style: ButtonStyle(
                     shape: MaterialStatePropertyAll<OutlinedBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        side: const BorderSide(
+                        borderRadius: BorderRadius.circular(8.0.px),
+                        side: BorderSide(
                           color: Palette.n900,
-                          width: 1.0,
+                          width: 1.0.px,
                         ),
                       ),
                     ),
-                    elevation: const MaterialStatePropertyAll(0.0),
+                    elevation: MaterialStatePropertyAll(0.0.px),
                     backgroundColor:
                         const MaterialStatePropertyAll<Color>(Colors.white),
                     foregroundColor:
