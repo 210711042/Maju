@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:maju/core/utils/currency.dart';
+import 'package:maju/data/entity/products.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
+import 'package:maju/views/pdf/pdf_view.dart';
 import 'package:maju/views/profile/profile.dart';
 import 'package:maju/views/seller/inputForm.dart';
 import 'dart:convert';
+
+import 'package:uuid/uuid.dart';
 
 class ProductsView extends StatefulWidget {
   const ProductsView({super.key});
@@ -20,6 +24,18 @@ class _ProductsViewState extends State<ProductsView> {
   List<Map<String, dynamic>> products = [];
   List<Map<String, dynamic>> foundProducts = [];
   int _selectedIndex = 1;
+  String id = const Uuid().v1();
+
+  List<Products> tempProducts = [
+    Products(
+        id: 1,
+        productName: "Mie ayam",
+        stock: 2,
+        price: 22,
+        image:
+            "https://lh3.googleusercontent.com/ivhjnKf86AcJ2mrCOYckh0UhW9y4uWdUE91x_SoW0J9-kvnhZbiQ6QId5C4i5HkEdsHaqHqukZ2fLeMpZwtdcy1mfjw=w640-h400-e365-rj-sc0x00ffffff")
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -134,6 +150,16 @@ class _ProductsViewState extends State<ProductsView> {
                   readJson();
                 },
                 child: Text("Test")),
+            ElevatedButton(
+                onPressed: () {
+                  debugPrint(tempProducts.toString());
+                  // createPdf("Mie Ayam", "20000", id, context, tempProducts);
+                  setState(() {
+                    const uuid = Uuid();
+                    id = uuid.v1();
+                  });
+                },
+                child: const Text("Create PDF")),
             const SizedBox(
               height: 24,
             ),

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:maju/core/widgets/UI/maju_basic_appbar.dart';
 import 'package:maju/views/qr_scanner/success_payment.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -14,6 +17,7 @@ class BarcodeScanner extends StatefulWidget {
 class _BarcodeScannerState extends State<BarcodeScanner> {
   BarcodeCapture? barcodeCapture;
   double currentBrightness = 0;
+  List<Map<String, dynamic>> dummyProducts = [];
 
   Future<void> resetBrightness() async {
     try {
@@ -50,6 +54,18 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
     await setBrightness(currentBrightness);
   }
 
+  Future<void> readJson() async {
+    final String response =
+        await rootBundle.loadString('assets/data/products.json');
+    final data = await json.decode(response);
+    final fakeProducts = List<Map<String, dynamic>>.from(data['products']);
+
+    setState(() {
+      dummyProducts = fakeProducts;
+      debugPrint(dummyProducts.toString());
+    });
+  }
+
   @override
   void initState() {
     debugPrint("=====================${currentBrightness.toString()}");
@@ -60,6 +76,7 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
     });
     setBrightnessToMax();
     super.initState();
+    readJson();
     debugPrint("=====================${currentBrightness.toString()}");
   }
 
@@ -85,13 +102,14 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
         return Stack(
           children: [
             MobileScanner(
-                startDelay: true,
-                controller: MobileScannerController(torchEnabled: false),
-                fit: BoxFit.fill,
-                // errorBuilder: (context, error, child) {
-                //   return ScannerErrorWidget(error: error);
-                // },
-                onDetect: (capture) => setBarcodeCapture(capture)),
+              startDelay: false,
+              controller: MobileScannerController(torchEnabled: false),
+              fit: BoxFit.fill,
+              // errorBuilder: (context, error, child) {
+              //   return ScannerErrorWidget(error: error);
+              // },
+              onDetect: (capture) => setBarcodeCapture(capture),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -124,33 +142,68 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
 
   Widget barcodeCaptureTextResult(BuildContext context) {
     if (barcodeCapture != null && barcodeCapture!.barcodes.isNotEmpty) {
-      if (barcodeCapture!.barcodes.first.rawValue!.startsWith("Product:")) {
-        Future.delayed(const Duration(milliseconds: 25), () {
-          resetBrightness();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SuccessPayment()),
-          );
-        });
-        // return Text(
-        //   barcodeCapture!.barcodes.first.rawValue!,
-        //   overflow: TextOverflow.fade,
-        //   style: Theme.of(context)
-        //       .textTheme
-        //       .headlineMedium!
-        //       .copyWith(color: Colors.white),
-        // );
+      String productId = barcodeCapture!.barcodes.first.rawValue!;
+      for (Map<String, dynamic> product in dummyProducts) {
+        if (product['id'].toString() == productId) {
+          debugPrint(product.toString());
+          debugPrint("BERHASIL");
+          Future.delayed(const Duration(milliseconds: 25), () {
+            resetBrightness();
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SuccessPayment(
+                        productName: product['title'].toString(),
+                        price: product['price'].toString(),
+                      )),
+            );
+          });
+
+          break;
+        }
       }
-    } else {
-      return Text(
-        'Click me',
-        overflow: TextOverflow.fade,
-        style: Theme.of(context)
-            .textTheme
-            .headlineMedium!
-            .copyWith(color: Colors.white),
-      );
+      // for (Map<String, dynamic> product in dummyProducts) {
+      //   if (product['id'] == barcodeCapture!.barcodes.first.rawValue!) {
+      //     debugPrint("found: $product['id]");
+      //     Future.delayed(const Duration(milliseconds: 25), () {
+      //       resetBrightness();
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => const SuccessPayment()),
+      //       );
+      //     });
+      //     break;
+      //   }
+      // }
     }
+    //   if (barcodeCapture!.barcodes.first.rawValue!.startsWith("Product:")) {
+    //     Future.delayed(const Duration(milliseconds: 25), () {
+    //       resetBrightness();
+    //       Navigator.push(
+    //         context,
+    //         MaterialPageRoute(builder: (context) => const SuccessPayment()),
+    //       );
+    //     });
+    //     // return Text(
+    //     //   barcodeCapture!.barcodes.first.rawValue!,
+    //     //   overflow: TextOverflow.fade,
+    //     //   style: Theme.of(context)
+    //     //       .textTheme
+    //     //       .headlineMedium!
+    //     //       .copyWith(color: Colors.white),
+    //     // );
+    //   }
+    // } else {
+    //   return Text(
+    //     'Click me',
+    //     overflow: TextOverflow.fade,
+    //     style: Theme.of(context)
+    //         .textTheme
+    //         .headlineMedium!
+    //         .copyWith(color: Colors.white),
+    //   );
+    // }
     return Text(
       "Invalid QR for MAJU Payment",
       style: Theme.of(context)

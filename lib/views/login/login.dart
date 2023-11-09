@@ -74,7 +74,7 @@ class _LoginViewState extends State<LoginView> {
               Text(
                 "Welcome to Maju",
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                    fontSize: 30.0.px,
+                    fontSize: 36.0.px,
                     color: Palette.n900,
                     fontWeight: FontWeight.w500),
               ),
@@ -82,14 +82,13 @@ class _LoginViewState extends State<LoginView> {
                 height: 8.0.px,
               ),
               Text(
-                "Lorem ipsum dolor sit amet consectetur. In magnis adipiscing suspendisse risus eget elit dolor.",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(fontSize: 2.0.px, fontWeight: FontWeight.normal),
-              ),
+                  "Lorem ipsum dolor sit amet consectetur. In magnis adipiscing suspendisse risus eget elit dolor.",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: 12.0.px, fontWeight: FontWeight.normal)),
               SizedBox(
-                height: 10.0.px,
+                height: 40.0.px,
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -136,6 +135,9 @@ class _LoginViewState extends State<LoginView> {
                 onPressed: () {
                   onLoginTaped();
                 },
+              ),
+              const SizedBox(
+                height: 64,
               ),
             ],
           ),
