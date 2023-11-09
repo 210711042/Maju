@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class OnBoardView extends StatefulWidget {
   const OnBoardView({super.key});
 
