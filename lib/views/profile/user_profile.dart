@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:maju/core/widgets/UI/maju_basic_appbar.dart';
 import 'package:maju/core/widgets/UI/maju_basic_tile.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
+import 'package:maju/data/client/UserClient.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/login/login.dart';
@@ -29,7 +31,7 @@ class _UserProfileState extends State<UserProfile> {
   late final LocalAuthentication auth;
   bool _supportState = false;
 
-  List foundUser = [];
+  Map<String, dynamic> foundUser = {};
 
   // Image picker variable
   final ImagePicker picker = ImagePicker();
@@ -45,12 +47,18 @@ class _UserProfileState extends State<UserProfile> {
   Future<void> _loadUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final List<String>? account = prefs.getStringList('account');
-    final users = await SQLHelper.getUserById(int.parse(account![0]));
+    final List<String>? users = prefs.getStringList('account');
+
+    User user = await UserClient.find(users![0]);
+
+    Map<String, dynamic> userMap = user.toJson();
+    debugPrint(userMap.toString());
     setState(() {
-      foundUser = users;
+      foundUser = userMap;
     });
-    debugPrint(foundUser[0]['profile_image']);
+
+    debugPrint(foundUser.toString());
+    // debugPrint(foundUser[0]['profile_image']);
   }
 
   @override
@@ -96,11 +104,11 @@ class _UserProfileState extends State<UserProfile> {
                         },
                         child: Stack(
                           children: [
-                            foundUser[0]['profile_image'] != null
+                            foundUser['image'] != null
                                 ? CircleAvatar(
                                     radius: 48.px,
-                                    backgroundImage: MemoryImage(
-                                        foundUser[0]['profile_image']))
+                                    backgroundImage:
+                                        MemoryImage(foundUser['image']))
                                 : CircleAvatar(
                                     radius: 48.px,
                                     backgroundImage: AssetImage(
@@ -124,7 +132,7 @@ class _UserProfileState extends State<UserProfile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            foundUser[0]['username'],
+                            foundUser['username'],
                             style: TextStyle(
                                 fontSize: 20.px,
                                 fontWeight: FontWeight.bold,
@@ -134,7 +142,7 @@ class _UserProfileState extends State<UserProfile> {
                             height: 8.0.px,
                           ),
                           Text(
-                            foundUser[0]['email'],
+                            foundUser['email'],
                             style: TextStyle(
                                 fontSize: 16.0.px,
                                 fontWeight: FontWeight.normal,
@@ -207,7 +215,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Future<void> _deleteImage() async {
-    await SQLHelper.deleteProfileImage(foundUser[0]['id']);
+    await SQLHelper.deleteProfileImage(foundUser[0]);
     await _loadUserData();
   }
 
@@ -238,7 +246,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Future<void> updateProfileImageAndLoadData(
       File selectedImage, Uint8List compressedImage) async {
-    await SQLHelper.updateProfileImage(foundUser[0]['id'], compressedImage);
+    await SQLHelper.updateProfileImage(foundUser[0], compressedImage);
     await _loadUserData();
 
     if (context.mounted) {

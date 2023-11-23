@@ -43,6 +43,10 @@ Aplikasi E-commerce Maju (Marketmaju) berbentuk market place yang dapat membantu
 - Nicodemus: Responsive User_profile, success_payment, Image picker, Generate PDF
 - Abraham: Generate PDF, Image Picker, Responsive all view left
 
+## Features UGD 11 | API
+
+- Abraham: Integrasi API Login, Register, Profile
+
 ## Tech Stack
 
 **Client:** Flutter

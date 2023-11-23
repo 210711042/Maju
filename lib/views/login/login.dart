@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
+import 'package:maju/data/client/UserClient.dart';
 import 'package:maju/themes/palette.dart';
 import 'package:maju/views/home/home.dart';
 import 'package:maju/views/login/register.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'dart:convert';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key});
@@ -26,6 +30,7 @@ class _LoginViewState extends State<LoginView> {
 
   void onLoginTaped() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
     final isAuthenticated =
         await SQLHelper.login(_emailController.text, _passwordController.text);
 
@@ -56,6 +61,48 @@ class _LoginViewState extends State<LoginView> {
         textColor: Colors.white,
         fontSize: 19.0.px,
       );
+    }
+  }
+
+  void onLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> res = await UserClient.login(
+      _emailController.text,
+      _passwordController.text,
+    );
+    // debugPrint(res['data']['id']);
+
+    // await prefs.setInt('account', res['data']['id']);
+
+    if (res['status'] == false) {
+      Fluttertoast.showToast(
+        msg: "Username or password incorrect",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+        textColor: Colors.white,
+        fontSize: 19.0,
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: "Selamat Datang di MarketMaju!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: const Color.fromARGB(255, 91, 202, 95),
+        textColor: Colors.white,
+        fontSize: 19.0,
+      );
+
+      await prefs.setStringList('account', <String>[
+        res['data']['id'].toString(),
+        res['data']['email'],
+        res['data']['username'],
+        res['data']['phone'],
+        res['data']['address'],
+      ]);
+
+      if (context.mounted) Navigator.of(context).push(HomeView.route());
     }
   }
 
@@ -96,7 +143,7 @@ class _LoginViewState extends State<LoginView> {
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0.px),
+                    borderRadius: BorderRadius.circular(8.0.px),
                   ),
                 ),
                 validator: (value) {
@@ -116,7 +163,7 @@ class _LoginViewState extends State<LoginView> {
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(4.0.px),
+                    borderRadius: BorderRadius.circular(8.0.px),
                   ),
                   suffixIcon: togglePassword(),
                 ),
@@ -133,7 +180,8 @@ class _LoginViewState extends State<LoginView> {
               MajuBasicButton(
                 textButton: "Sign in",
                 onPressed: () {
-                  onLoginTaped();
+                  // onLoginTaped();
+                  onLogin();
                 },
               ),
               const SizedBox(
