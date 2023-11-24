@@ -227,7 +227,7 @@ class _UserProfileState extends State<UserProfile> {
 
     final selectedImage = File(returnImage.path);
     final imgFile = File(returnImage.path).readAsBytesSync();
-    final compressedImage = await compressImage(imgFile);
+    final compressedImage = await compressImage(Uint8List.fromList(imgFile));
 
     await updateProfileImageAndLoadData(selectedImage, compressedImage);
   }
@@ -239,18 +239,37 @@ class _UserProfileState extends State<UserProfile> {
 
     final selectedImage = File(returnImage.path);
     final imgFile = File(returnImage.path).readAsBytesSync();
-    final compressedImage = await compressImage(imgFile);
+    final compressedImage = await compressImage(Uint8List.fromList(imgFile));
 
     await updateProfileImageAndLoadData(selectedImage, compressedImage);
   }
 
   Future<void> updateProfileImageAndLoadData(
       File selectedImage, Uint8List compressedImage) async {
-    await SQLHelper.updateProfileImage(foundUser[0], compressedImage);
-    await _loadUserData();
+     String email = foundUser['email'];
+    String username = foundUser['username'];
+    String password = foundUser['password'];
+    String address = foundUser['address'];
+    String phone = foundUser['phone'];
 
-    if (context.mounted) {
-      Navigator.of(context).pop();
+    User userToUpdate = User(
+      id: foundUser['id'],
+      email: email,
+      username: username,
+      password: password,
+      address: address,
+      phone: phone,
+      profile_image: compressedImage,
+    );
+    try {
+      await UserClient.update(userToUpdate);
+      await _loadUserData();
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      print("Error updating profile image: $e");
     }
   }
 

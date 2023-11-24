@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:typed_data';
 import 'package:http/http.dart';
 
 class User {
@@ -9,6 +9,8 @@ class User {
   String password;
   String address;
   String phone;
+  Uint8List? profile_image;
+  
 
   User(
       {required this.id,
@@ -16,7 +18,8 @@ class User {
       required this.username,
       required this.password,
       required this.address,
-      required this.phone});
+      required this.phone,
+      this.profile_image});
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -107,6 +110,22 @@ class UserClient {
         "status": false,
         "message": "Error: ${e.toString()}",
       };
+    }
+  }
+
+  static Future<Response> update(User user) async {
+    try {
+      var response = await put(
+        Uri.http(url, '$endpoint/${user.id}'),
+        headers: {"Content-Type": "application/json"},
+        body: user.toRawJson(),
+      );
+
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+
+      return response;
+    } catch (e) {
+      return Future.error(e.toString());
     }
   }
 }
