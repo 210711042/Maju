@@ -6,17 +6,19 @@ class User {
   int id;
   String email;
   String username;
-  String password;
+  String? password;
   String address;
   String phone;
+  String? image;
 
   User(
       {required this.id,
       required this.email,
       required this.username,
-      required this.password,
+      this.password,
       required this.address,
-      required this.phone});
+      required this.phone,
+      this.image});
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -34,7 +36,8 @@ class User {
         "username": username,
         "password": password,
         "address": address,
-        "phone": phone
+        "phone": phone,
+        "image": image
       };
 }
 
@@ -62,7 +65,19 @@ class UserClient {
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
-      return User.fromJson(json.decode(response.body)['data']);
+      return User.fromJson(json.decode(response.body));
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  static Future<Map<String, dynamic>> findById(id) async {
+    try {
+      var response = await get(Uri.http(url, '$endpoint/$id'));
+
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+
+      return json.decode(response.body);
     } catch (e) {
       return Future.error(e.toString());
     }
@@ -70,13 +85,28 @@ class UserClient {
 
   static Future<Response> create(User user) async {
     try {
-      print(user.toRawJson());
-      print(Uri.http(url, endpoint));
+      // print(user.toRawJson());
+      // print(Uri.http(url, endpoint));
       var response = await post(Uri.http(url, endpoint),
           headers: {"Content-Type": "application/json"},
           body: user.toRawJson());
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+      return response;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  static Future<Response> update(User user) async {
+    try {
+      // print(user.toRawJson());
+      // print(Uri.http(url, endpoint));
+      var response = await put(Uri.http(url, "$endpoint/${user.id}"),
+          headers: {"Content-Type": "application/json"},
+          body: user.toRawJson());
+      print("${response.body.toString()} ${response.statusCode}");
+      if (response.statusCode != 201) throw Exception(response.reasonPhrase);
       return response;
     } catch (e) {
       return Future.error(e.toString());

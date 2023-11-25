@@ -10,6 +10,7 @@ import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/data/client/UserClient.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
+import 'package:maju/views/as_seller/SellerCenter.dart';
 import 'package:maju/views/login/login.dart';
 import 'package:maju/views/profile/edit_profile.dart';
 import 'package:local_auth/local_auth.dart';
@@ -17,6 +18,7 @@ import 'package:maju/views/qr_scanner/scan_qr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:image/image.dart' as img;
+import 'package:http/http.dart' as http;
 
 File? shownImage;
 
@@ -31,8 +33,8 @@ class _UserProfileState extends State<UserProfile> {
   late final LocalAuthentication auth;
   bool _supportState = false;
 
-  Map<String, dynamic> foundUser = {};
-
+  late Map<String, dynamic> foundUser = {};
+  Future<User?>? tempUser;
   // Image picker variable
   final ImagePicker picker = ImagePicker();
   Uint8List? imgFile;
@@ -61,6 +63,36 @@ class _UserProfileState extends State<UserProfile> {
     // debugPrint(foundUser[0]['profile_image']);
   }
 
+  Future<User> fetchUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final List<String>? users = prefs.getStringList('account');
+    Map<String, dynamic> response =
+        await UserClient.findById(int.parse(users![0]));
+    debugPrint(response.toString());
+    debugPrint(response['data'].toString());
+    Map<String, dynamic> temp = response['data'];
+    User user = User(
+        id: temp['id'],
+        email: temp['email'],
+        username: temp['username'],
+        password: temp['password'],
+        address: temp['address'],
+        phone: temp['phone'],
+        image: temp['image']);
+    return user;
+  }
+
+  Future<void> _getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final List<String>? users = prefs.getStringList('account');
+    debugPrint(users.toString());
+    setState(() {
+      id = int.parse(users![0]);
+    });
+  }
+
   @override
   void initState() {
     auth = LocalAuthentication();
@@ -68,7 +100,10 @@ class _UserProfileState extends State<UserProfile> {
     auth.isDeviceSupported().then((bool isSupported) => setState(() {
           _supportState = isSupported;
         }));
-    _loadUserData();
+    // _loadUserData();
+
+    tempUser = fetchUser();
+    debugPrint(tempUser.toString());
     super.initState();
   }
 
@@ -86,79 +121,102 @@ class _UserProfileState extends State<UserProfile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet<void>(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0.px),
-                              ),
-                              context: context,
-                              builder: (BuildContext context) {
-                                return BottomSheetOptions(
-                                    deleteImage: _deleteImage,
-                                    pickFromCamera: _pickImageFromCamera,
-                                    pickFromGallery: _pickImageFromGallery);
-                              });
-                        },
-                        child: Stack(
+                  FutureBuilder<User?>(
+                    future: tempUser,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            foundUser['image'] != null
-                                ? CircleAvatar(
-                                    radius: 48.px,
-                                    backgroundImage:
-                                        MemoryImage(foundUser['image']))
-                                : CircleAvatar(
-                                    radius: 48.px,
-                                    backgroundImage: AssetImage(
-                                        "assets/images/profile.jpg")),
-                            Positioned(
-                              bottom: 0.px,
-                              right: 0.px,
-                              child: Icon(
-                                Icons.camera_alt,
-                                size: 16.0.px,
-                                color: Palette.n900,
-                              ),
-                            )
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet<void>(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16.0.px),
+                                        ),
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return BottomSheetOptions(
+                                              deleteImage: _deleteImage,
+                                              pickFromCamera:
+                                                  _pickImageFromCamera,
+                                              pickFromGallery:
+                                                  _pickImageFromGallery);
+                                        });
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      snapshot.data!.image != null
+                                          ? CircleAvatar(
+                                              radius: 48.px,
+                                              backgroundImage: MemoryImage(File(
+                                                      snapshot.data!.image ??
+                                                          "")
+                                                  .readAsBytesSync()))
+                                          : CircleAvatar(
+                                              radius: 48.px,
+                                              backgroundImage: AssetImage(
+                                                  "assets/images/profile.jpg")),
+                                      Positioned(
+                                        bottom: 0.px,
+                                        right: 0.px,
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 16.0.px,
+                                          color: Palette.n900,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 16.0.px,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data!.username,
+                                      style: TextStyle(
+                                          fontSize: 20.px,
+                                          fontWeight: FontWeight.bold,
+                                          color: Palette.n900),
+                                    ),
+                                    SizedBox(
+                                      height: 8.0.px,
+                                    ),
+                                    Text(
+                                      snapshot.data!.email,
+                                      style: TextStyle(
+                                          fontSize: 16.0.px,
+                                          fontWeight: FontWeight.normal,
+                                          color: Palette.n700),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 16.0.px,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            foundUser['username'],
-                            style: TextStyle(
-                                fontSize: 20.px,
-                                fontWeight: FontWeight.bold,
-                                color: Palette.n900),
-                          ),
-                          SizedBox(
-                            height: 8.0.px,
-                          ),
-                          Text(
-                            foundUser['email'],
-                            style: TextStyle(
-                                fontSize: 16.0.px,
-                                fontWeight: FontWeight.normal,
-                                color: Palette.n700),
-                          )
-                        ],
-                      )
-                    ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      }
+
+                      // By default, show a loading spinner.
+                      return const CircularProgressIndicator.adaptive();
+                    },
                   ),
                   SizedBox(
                     height: 32.0.px,
                   ),
                   PengaturanAkunTileView(
-                      onAuthenticate: _supportState
-                          ? _authenticate
-                          : _securityIsNotDefined),
+                    onAuthenticate:
+                        _supportState ? _authenticate : _securityIsNotDefined,
+                    onEdit: _editHandler,
+                  ),
                   SizedBox(
                     height: 32.0.px,
                   ),
@@ -174,6 +232,31 @@ class _UserProfileState extends State<UserProfile> {
         ),
       );
     });
+  }
+
+  Future<void> _editHandler() async {
+    try {
+      User? user = await tempUser!;
+      debugPrint('Username: ${user!.username}');
+      if (mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EditProfile(
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    address: user.address,
+                    phone: user.phone,
+                    image: user.image))).then((value) {
+          setState(() {
+            tempUser = fetchUser();
+          });
+        });
+      }
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
   }
 
   Future<void> _securityIsNotDefined() async {
@@ -269,8 +352,8 @@ class _UserProfileState extends State<UserProfile> {
 }
 
 class PengaturanAkunTileView extends StatelessWidget {
-  const PengaturanAkunTileView({super.key, this.onAuthenticate});
-  final VoidCallback? onAuthenticate;
+  const PengaturanAkunTileView({super.key, this.onAuthenticate, this.onEdit});
+  final VoidCallback? onAuthenticate, onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -294,8 +377,18 @@ class PengaturanAkunTileView extends StatelessWidget {
               onAuthenticate!();
             }),
         MajuBasicTile(
-            icon: Icons.home_rounded, title: "Daftar Alamat", onTap: () {}),
-        MajuBasicTile(icon: Icons.money, title: "Rekening Bank", onTap: () {}),
+            icon: Icons.home_rounded,
+            title: "Daftar Alamat",
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const SellerCenter()));
+            }),
+        MajuBasicTile(
+            icon: Icons.money,
+            title: "Rekening Bank",
+            onTap: () {
+              onEdit!();
+            }),
       ],
     );
   }

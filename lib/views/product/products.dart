@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:maju/core/utils/currency.dart';
+import 'package:maju/data/client/ProductClient.dart';
 import 'package:maju/data/entity/products.dart';
 import 'package:maju/data/sql_helper.dart';
 import 'package:maju/themes/palette.dart';
@@ -25,6 +26,8 @@ class _ProductsViewState extends State<ProductsView> {
   List<Map<String, dynamic>> foundProducts = [];
   int _selectedIndex = 1;
   String id = const Uuid().v1();
+
+  List<dynamic>? productss = [];
 
   List<Products> tempProducts = [
     Products(
@@ -101,9 +104,20 @@ class _ProductsViewState extends State<ProductsView> {
     refresh();
   }
 
+  Future<void> getProducts() async {
+    // Map<String, dynamic> response = await ProductClient.getProducts();
+    // debugPrint(response['data'].toString());
+
+    // setState(() {
+    //   productss =
+    //       List.from(response['data']); // Assuming response['data'] is a list
+    // });
+  }
+
   @override
   void initState() {
     refresh();
+    getProducts();
     foundProducts = products;
     super.initState();
   }
@@ -147,9 +161,10 @@ class _ProductsViewState extends State<ProductsView> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  readJson();
+                  getProducts();
+                  debugPrint("A $productss.toString()");
                 },
-                child: Text("Test")),
+                child: Text("Test Query")),
             ElevatedButton(
                 onPressed: () {
                   debugPrint(tempProducts.toString());
@@ -170,117 +185,42 @@ class _ProductsViewState extends State<ProductsView> {
                   color: Palette.n900,
                   fontWeight: FontWeight.w500),
             ),
-            Expanded(
-              child: foundProducts.isEmpty
-                  ? const Column(
-                      children: [
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        Text("No products found...")
-                      ],
-                    )
-                  : ListView.builder(
-                      itemCount: foundProducts.length,
-                      itemBuilder: (context, index) {
-                        return Slidable(
-                          actionPane: const SlidableDrawerActionPane(),
-                          secondaryActions: [
-                            IconSlideAction(
-                              caption: 'Update',
-                              color: Colors.blue,
-                              icon: Icons.update,
-                              onTap: () async {
-                                if (products[index]['product_name'] != null) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => InputProduct(
-                                        id: products[index]['id'],
-                                        productName: products[index]
-                                            ['product_name'],
-                                        stock: products[index]['stock'],
-                                        price: products[index]['price'],
-                                        image: products[index]['image'],
-                                      ),
-                                    ),
-                                  ).then((_) => refresh());
-                                } else {
-                                  print(
-                                      "Data produk memiliki nilai null  $products, $index");
-                                }
-                              },
-                            ),
-                            IconSlideAction(
-                              caption: 'Delete',
-                              color: Colors.red,
-                              icon: Icons.delete,
-                              onTap: () async {
-                                await deleteProduct(products[index]['id']);
-                              },
-                            )
-                          ],
-                          child: Card(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.asset(foundProducts[index]['image']),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        foundProducts[index]['product_name'],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                              fontSize: 14.0,
-                                              color: Palette.n900,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        CurrencyFormat.convertToIdr(
-                                            foundProducts[index]['price'], 2),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                              fontSize: 16.0,
-                                              color: Palette.n900,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        "${foundProducts[index]['stock'].toString()} items left",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                              fontSize: 14.0,
-                                              color: Palette.n900,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-            ),
+            // Expanded(
+            //   child: productss == null || productss!.isEmpty
+            //       ? const Center(
+            //           child:
+            //               CircularProgressIndicator(), // Show CircularProgressIndicator when productss is null or empty
+            //         )
+            //       : ListView.builder(
+            //           itemCount: productss!.length,
+            //           itemBuilder: (BuildContext context, int index) {
+            //             return Column(
+            //               children: <Widget>[
+            //                 ListTile(
+            //                   title: Text(productss![index]['product_name'] ??
+            //                       'No Name'),
+            //                   subtitle: const Text("4"),
+            //                 ),
+            //                 const Divider(
+            //                   height: 2.0,
+            //                 ),
+            //               ],
+            //             );
+            //           },
+            //         ),
+            // )
+            // productss == null ?
+            // Center(child: const CircularProgressIndicator()) :
+            SingleChildScrollView(
+              child: ListView.builder(
+                itemCount: productss?.length ?? 0,
+                itemBuilder: (BuildContext context, int index) {
+                  final productName =
+                      productss?[index]['product_name'] ?? 'No Name';
+                  return Text(productName);
+                },
+              ),
+            )
           ],
         ),
       ),
