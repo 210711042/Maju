@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class User {
-  int id;
+  int? id;
   String email;
   String username;
   String? password;
@@ -12,7 +12,7 @@ class User {
   String? image;
 
   User(
-      {required this.id,
+      {this.id,
       required this.email,
       required this.username,
       this.password,
@@ -42,7 +42,8 @@ class User {
 }
 
 class UserClient {
-  static final String url = '10.0.2.2:8000';
+  // static final String url = '10.0.2.2:8000';
+  static final String url = '127.0.0.1:8000';
   static final String endpoint = '/api/user';
 
   static Future<List<User>> fetchAll() async {

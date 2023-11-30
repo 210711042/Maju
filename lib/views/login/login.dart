@@ -22,7 +22,8 @@ class LoginView extends StatefulWidget {
   State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends State<LoginView>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -138,6 +139,7 @@ class _LoginViewState extends State<LoginView> {
                 height: 40.0.px,
               ),
               TextFormField(
+                key: const Key("emailKey"),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -157,6 +159,7 @@ class _LoginViewState extends State<LoginView> {
                 height: 10.0.px,
               ),
               TextFormField(
+                key: const Key("passwordKey"),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _passwordController,
                 obscureText: _isSecurePassword,
@@ -178,6 +181,7 @@ class _LoginViewState extends State<LoginView> {
                 height: 20.0.px,
               ),
               MajuBasicButton(
+                key: Key("loginButton"),
                 textButton: "Sign in",
                 onPressed: () {
                   // onLoginTaped();
