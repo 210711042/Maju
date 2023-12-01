@@ -4,22 +4,19 @@ import 'package:maju/views/as_seller/product_actions.dart'; // Sesuaikan dengan 
 
 void main() {
   testWidgets('Test Create Product', (WidgetTester tester) async {
-    // Bangun widget ProductActions dalam mode tambah (Add)
+
     await tester.pumpWidget(MaterialApp(
       home: Material(
         child: ProductActions(),
       ),
     ));
 
-    // Tunggu hingga widget selesai diproses
     await tester.pump();
-
-    // Temukan TextFormField berdasarkan labelnya
+    
     final productNameField = find.widgetWithText(TextFormField, 'Nama Produk');
     final priceField = find.widgetWithText(TextFormField, 'Harga');
     final descriptionField = find.widgetWithText(TextFormField, 'Deskripsi Produk');
 
-    // Verifikasi bahwa TextFormField tidak kosong saat widget dibangun dalam mode tambah
     expect(find.widgetWithText(TextFormField, 'Nama Produk'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, 'Harga'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, 'Deskripsi Produk'), findsOneWidget);
