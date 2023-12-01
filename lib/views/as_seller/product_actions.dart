@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:maju/core/widgets/maju_basic_button.dart';
 import 'package:maju/data/client/ProductClient.dart';
@@ -9,9 +7,7 @@ class ProductActions extends StatefulWidget {
   final String? productName, description;
   final double? price;
   final int? id;
-
-  const ProductActions(
-      {super.key, this.id, this.productName, this.price, this.description});
+  const ProductActions({Key? key, this.productName, this.description, this.price, this.id});
 
   @override
   State<ProductActions> createState() => _ProductActionsState();
@@ -21,6 +17,8 @@ class _ProductActionsState extends State<ProductActions> {
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  
+  get productNameKey => null;
 
   Future<void> _createProduct() async {
     try {
@@ -109,6 +107,7 @@ class _ProductActionsState extends State<ProductActions> {
                 height: 24.0,
               ),
               TextFormField(
+                key: productNameKey,
                 controller: _productNameController,
                 decoration: InputDecoration(
                     label: const Text("Nama Produk"),

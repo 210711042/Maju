@@ -18,14 +18,16 @@ class ProductsView extends StatefulWidget {
   const ProductsView({super.key});
 
   @override
-  State<ProductsView> createState() => _ProductsViewState();
+  State<ProductsView> createState() => ProductsViewState();
 }
 
-class _ProductsViewState extends State<ProductsView> {
+class ProductsViewState extends State<ProductsView> {
   List<Map<String, dynamic>> products = [];
   List<Map<String, dynamic>> foundProducts = [];
   int _selectedIndex = 1;
   String id = const Uuid().v1();
+  final createPdfButtonKey = UniqueKey();
+  
 
   List<dynamic>? productss = [];
 
@@ -166,6 +168,7 @@ class _ProductsViewState extends State<ProductsView> {
                 },
                 child: Text("Test Query")),
             ElevatedButton(
+                key: createPdfButtonKey,
                 onPressed: () {
                   debugPrint(tempProducts.toString());
                   // createPdf("Mie Ayam", "20000", id, context, tempProducts);
