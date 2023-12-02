@@ -11,11 +11,11 @@ class Product {
 
   Product(
       {this.id,
-      required this.idSeller,
+      this.idSeller = 1,
       required this.productName,
       required this.price,
       required this.description,
-      required this.rating,
+      this.rating = 2,
       this.thumbnailUrl});
 
   String toRawJson() => json.encode(toJson());
@@ -24,7 +24,7 @@ class Product {
         "product_name": productName,
         "price": price,
         "description": description,
-        "id_seller": idSeller
+        // "id_seller": idSeller
       };
 }
 
@@ -51,15 +51,12 @@ class ProductClient {
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
       List<dynamic> productList = json.decode(response.body)['data'];
-
       List<Product> products = productList
           .map((product) => Product(
                 id: product['id'],
-                idSeller: product['id_seller'],
                 productName: product['product_name'],
                 price: product['price'].toDouble(),
                 description: product['description'] ?? "",
-                rating: product['rating'].toDouble(),
                 thumbnailUrl: product['thumbnail_url'] ?? "",
               ))
           .toList();
@@ -86,7 +83,7 @@ class ProductClient {
       var response = await post(Uri.http(url, endpoint),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(product));
-
+      print(response.body.toString());
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
       return response;

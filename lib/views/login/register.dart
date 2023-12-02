@@ -155,6 +155,7 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 32.0.px,
                   ),
                   TextFormField(
+                    key: const ValueKey("usernameKey"),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: usernameController,
                     decoration: InputDecoration(
@@ -175,6 +176,7 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 16.0.px,
                   ),
                   TextFormField(
+                    key: const ValueKey("emailKey"),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: emailController,
                     decoration: InputDecoration(
@@ -198,6 +200,7 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 16.0.px,
                   ),
                   TextFormField(
+                    key: const ValueKey("passwordKey"),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     obscureText: _isSecurePassword,
                     controller: passwordController,
@@ -222,6 +225,7 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 16.0.px,
                   ),
                   TextFormField(
+                    key: const ValueKey("password2Key"),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     obscureText: _isSecurePassword2,
                     controller: reEnterPasswordController,
@@ -259,6 +263,7 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 16.0.px,
                   ),
                   TextFormField(
+                    key: const ValueKey("phoneKey"),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: phoneNumberController,
                     decoration: InputDecoration(
@@ -279,6 +284,7 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 16.0.px,
                   ),
                   TextFormField(
+                    key: const ValueKey("addressKey"),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: addressController,
                     decoration: InputDecoration(
@@ -299,6 +305,7 @@ class _RegisterViewState extends State<RegisterView> {
                     height: 24.0.px,
                   ),
                   MajuBasicButton(
+                    key: const ValueKey("submitBtn"),
                     textButton: "Sign up",
                     onPressed: () async {
                       isEmailUsed =

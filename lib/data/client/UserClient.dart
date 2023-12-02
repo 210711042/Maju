@@ -42,8 +42,8 @@ class User {
 }
 
 class UserClient {
-  // static final String url = '10.0.2.2:8000';
-  static final String url = '127.0.0.1:8000';
+  static final String url = '10.0.2.2:8000';
+  // static final String url = '127.0.0.1:8000';
   static final String endpoint = '/api/user';
 
   static Future<List<User>> fetchAll() async {
@@ -117,14 +117,18 @@ class UserClient {
   static Future<Map<String, dynamic>> login(
       String email, String password) async {
     try {
+      // var ss = await get(Uri.http(url, endpoint));
+      // print(ss.body.toString());
       Map<String, dynamic> request = {"email": email, "password": password};
 
+      print(json.encode(request).toString());
+      print(Uri.http(url, '/api/login').toString());
       var response = await post(
         Uri.http(url, '/api/login'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(request),
       );
-
+      print("AAA");
       if (response.statusCode != 200) {
         return {
           "status": false,

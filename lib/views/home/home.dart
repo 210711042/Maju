@@ -143,152 +143,152 @@ class _HomeViewState extends State<HomeView> {
                     SizedBox(
                       height: 4.px,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Berakhir pukul 17:00 WIB",
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge!
-                              .copyWith(
-                                  fontSize: 14.0,
-                                  color: Palette.n900,
-                                  fontWeight: FontWeight.w400),
-                        ),
-                        Text(
-                          "Lihat Semua",
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge!
-                              .copyWith(
-                                  fontSize: 14.0,
-                                  color: Palette.n900,
-                                  fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 16.px,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          MajuBasicProduct(
-                            image: "product_1.png",
-                            title: "Busa ganjal penutup celah pintu anti kecoa",
-                            price: "29.000",
-                            location: "Tangerang",
-                            rating: "4.9",
-                            sold: "100+",
-                          ),
-                          MajuBasicProduct(
-                            image: "product_2.png",
-                            title: "Pisau potong buah dan daging 4 pcs",
-                            price: "45.500",
-                            location: "Kab. Kudus",
-                            rating: "4.9",
-                            sold: "1.2k",
-                            isCashback: true,
-                          ),
-                          MajuBasicProduct(
-                            image: "product_3.png",
-                            title:
-                                "3 In 1 Kitchen Set lengkap untuk dapur anda yang bagus",
-                            price: "179.900",
-                            location: "Semarang",
-                            rating: "4.7",
-                            sold: "200+",
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 24.px,
-                    ),
-                    Text(
-                      "Toko Pilihan Untukmu",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontSize: 18.0,
-                          color: Palette.n900,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: 16.px,
-                    ),
-                    const SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MajuBasicShopCard(),
-                            MajuBasicShopCard(),
-                            MajuBasicShopCard(),
-                            MajuBasicShopCard(),
-                            MajuBasicShopCard(),
-                            MajuBasicShopCard(),
-                          ],
-                        )),
-                    SizedBox(
-                      height: 24.px,
-                    ),
-                    Text(
-                      "Sample Product",
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          fontSize: 18.0,
-                          color: Palette.n900,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: 16.0.px,
-                    ),
-                    GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount:
-                            Device.orientation == Orientation.portrait
-                                ? 2
-                                : 4, // number of items in each row
-                        mainAxisSpacing: 16.0, // spacing between rows
-                        crossAxisSpacing: 16.0, // spacing between columns
-                        mainAxisExtent: 290,
-                      ),
-                      padding:
-                          const EdgeInsets.all(0.0), // padding around the grid
-                      itemCount: dummyProducts.length, // total number of items
-                      itemBuilder: (_, index) {
-                        return GestureDetector(
-                          onTap: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductDetail(
-                                        id: index,
-                                        productName: dummyProducts[index]
-                                            ['title'],
-                                        price: dummyProducts[index]['price']
-                                            .toDouble(),
-                                        stock: dummyProducts[index]['stock'],
-                                        images: dummyProducts[index]['images'],
-                                        thumbnail: dummyProducts[index]
-                                            ['thumbnail'],
-                                        description: dummyProducts[index]
-                                            ['description'])));
-                          },
-                          child: MajuProduct(
-                              image: dummyProducts[index]['thumbnail'],
-                              title: dummyProducts[index]['title'],
-                              price: dummyProducts[index]['price'].toDouble(),
-                              location: "jakarta",
-                              rating:
-                                  dummyProducts[index]['rating'].toDouble() ??
-                                      0,
-                              sold: "200+"),
-                        );
-                      },
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       "Berakhir pukul 17:00 WIB",
+                    //       style: Theme.of(context)
+                    //           .textTheme
+                    //           .labelLarge!
+                    //           .copyWith(
+                    //               fontSize: 14.0,
+                    //               color: Palette.n900,
+                    //               fontWeight: FontWeight.w400),
+                    //     ),
+                    //     Text(
+                    //       "Lihat Semua",
+                    //       style: Theme.of(context)
+                    //           .textTheme
+                    //           .labelLarge!
+                    //           .copyWith(
+                    //               fontSize: 14.0,
+                    //               color: Palette.n900,
+                    //               fontWeight: FontWeight.w600),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   height: 16.px,
+                    // ),
+                    // SingleChildScrollView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   child: Row(
+                    //     children: [
+                    //       MajuBasicProduct(
+                    //         image: "product_1.png",
+                    //         title: "Busa ganjal penutup celah pintu anti kecoa",
+                    //         price: "29.000",
+                    //         location: "Tangerang",
+                    //         rating: "4.9",
+                    //         sold: "100+",
+                    //       ),
+                    //       MajuBasicProduct(
+                    //         image: "product_2.png",
+                    //         title: "Pisau potong buah dan daging 4 pcs",
+                    //         price: "45.500",
+                    //         location: "Kab. Kudus",
+                    //         rating: "4.9",
+                    //         sold: "1.2k",
+                    //         isCashback: true,
+                    //       ),
+                    //       MajuBasicProduct(
+                    //         image: "product_3.png",
+                    //         title:
+                    //             "3 In 1 Kitchen Set lengkap untuk dapur anda yang bagus",
+                    //         price: "179.900",
+                    //         location: "Semarang",
+                    //         rating: "4.7",
+                    //         sold: "200+",
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 24.px,
+                    // ),
+                    // Text(
+                    //   "Toko Pilihan Untukmu",
+                    //   style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    //       fontSize: 18.0,
+                    //       color: Palette.n900,
+                    //       fontWeight: FontWeight.w500),
+                    // ),
+                    // SizedBox(
+                    //   height: 16.px,
+                    // ),
+                    // const SingleChildScrollView(
+                    //     scrollDirection: Axis.horizontal,
+                    //     child: Row(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         MajuBasicShopCard(),
+                    //         MajuBasicShopCard(),
+                    //         MajuBasicShopCard(),
+                    //         MajuBasicShopCard(),
+                    //         MajuBasicShopCard(),
+                    //         MajuBasicShopCard(),
+                    //       ],
+                    //     )),
+                    // SizedBox(
+                    //   height: 24.px,
+                    // ),
+                    // Text(
+                    //   "Sample Product",
+                    //   style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    //       fontSize: 18.0,
+                    //       color: Palette.n900,
+                    //       fontWeight: FontWeight.w500),
+                    // ),
+                    // SizedBox(
+                    //   height: 16.0.px,
+                    // ),
+                    // GridView.builder(
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   shrinkWrap: true,
+                    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount:
+                    //         Device.orientation == Orientation.portrait
+                    //             ? 2
+                    //             : 4, // number of items in each row
+                    //     mainAxisSpacing: 16.0, // spacing between rows
+                    //     crossAxisSpacing: 16.0, // spacing between columns
+                    //     mainAxisExtent: 290,
+                    //   ),
+                    //   padding:
+                    //       const EdgeInsets.all(0.0), // padding around the grid
+                    //   itemCount: dummyProducts.length, // total number of items
+                    //   itemBuilder: (_, index) {
+                    //     return GestureDetector(
+                    //       onTap: () async {
+                    //         Navigator.push(
+                    //             context,
+                    //             MaterialPageRoute(
+                    //                 builder: (context) => ProductDetail(
+                    //                     id: index,
+                    //                     productName: dummyProducts[index]
+                    //                         ['title'],
+                    //                     price: dummyProducts[index]['price']
+                    //                         .toDouble(),
+                    //                     stock: dummyProducts[index]['stock'],
+                    //                     images: dummyProducts[index]['images'],
+                    //                     thumbnail: dummyProducts[index]
+                    //                         ['thumbnail'],
+                    //                     description: dummyProducts[index]
+                    //                         ['description'])));
+                    //       },
+                    //       child: MajuProduct(
+                    //           image: dummyProducts[index]['thumbnail'],
+                    //           title: dummyProducts[index]['title'],
+                    //           price: dummyProducts[index]['price'].toDouble(),
+                    //           location: "jakarta",
+                    //           rating:
+                    //               dummyProducts[index]['rating'].toDouble() ??
+                    //                   0,
+                    //           sold: "200+"),
+                    //     );
+                    //   },
+                    // ),
 
                     // GridView.builder(
                     //   physics: const NeverScrollableScrollPhysics(),
@@ -348,7 +348,7 @@ class _HomeViewState extends State<HomeView> {
                     SizedBox(
                       height: 16.0.px,
                     ),
-                    const ProductGrid()
+                    // const ProductGrid()
                   ],
                 ),
               )),

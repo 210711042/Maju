@@ -109,6 +109,7 @@ class _ProductActionsState extends State<ProductActions> {
                 height: 24.0,
               ),
               TextFormField(
+                key: const ValueKey("namaKey"),
                 controller: _productNameController,
                 decoration: InputDecoration(
                     label: const Text("Nama Produk"),
@@ -119,6 +120,7 @@ class _ProductActionsState extends State<ProductActions> {
                 height: 16.0,
               ),
               TextFormField(
+                key: const ValueKey("hargaKey"),
                 controller: _priceController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -130,6 +132,7 @@ class _ProductActionsState extends State<ProductActions> {
                 height: 16.0,
               ),
               TextFormField(
+                key: const ValueKey("deskripsiKey"),
                 controller: _descriptionController,
                 decoration: InputDecoration(
                     label: const Text("Deskripsi Produk"),
@@ -146,6 +149,7 @@ class _ProductActionsState extends State<ProductActions> {
                 child: Column(
                   children: [
                     MajuBasicButton(
+                        key: const ValueKey('deleteBtn'),
                         textButton: "Hapus",
                         onPressed: () async {
                           if (widget.id != null) {
@@ -158,6 +162,7 @@ class _ProductActionsState extends State<ProductActions> {
                 ),
               ),
               MajuBasicButton(
+                  key: const ValueKey('actionBtn'),
                   textButton: widget.id == null ? "Tambah" : "Edit",
                   onPressed: () async {
                     if (widget.id != null) {

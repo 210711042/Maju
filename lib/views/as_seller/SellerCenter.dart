@@ -37,7 +37,6 @@ class _SellerCenterState extends State<SellerCenter> {
                 productName: item['product_name'],
                 price: item['price'].toDouble(),
                 description: item['description'],
-                rating: item['rating'].toDouble(),
                 thumbnailUrl: item['thumbnail_url'],
               )));
 
@@ -62,6 +61,7 @@ class _SellerCenterState extends State<SellerCenter> {
         title: const Text("Seller Center"),
         actions: [
           IconButton(
+            key: const ValueKey("addBtn"),
             icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.of(context)

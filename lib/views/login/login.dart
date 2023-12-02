@@ -52,7 +52,9 @@ class _LoginViewState extends State<LoginView>
         isAuthenticated[0]['address'],
       ]);
 
-      if (context.mounted) Navigator.of(context).push(HomeView.route());
+      if (context.mounted)
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => HomeView()));
     } else {
       Fluttertoast.showToast(
         msg: "Email atau Password salah",
@@ -139,7 +141,7 @@ class _LoginViewState extends State<LoginView>
                 height: 40.0.px,
               ),
               TextFormField(
-                key: const Key("emailKey"),
+                key: const ValueKey("emailKey"),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -159,7 +161,7 @@ class _LoginViewState extends State<LoginView>
                 height: 10.0.px,
               ),
               TextFormField(
-                key: const Key("passwordKey"),
+                key: const ValueKey("passwordKey"),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: _passwordController,
                 obscureText: _isSecurePassword,
@@ -181,7 +183,7 @@ class _LoginViewState extends State<LoginView>
                 height: 20.0.px,
               ),
               MajuBasicButton(
-                key: Key("loginButton"),
+                key: ValueKey("loginButton"),
                 textButton: "Sign in",
                 onPressed: () {
                   // onLoginTaped();
