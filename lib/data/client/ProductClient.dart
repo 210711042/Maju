@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 class Product {
   int? id;
@@ -32,6 +32,20 @@ class ProductClient {
   static String url = '10.0.2.2:8000';
   static String endpoint = '/api/product';
 
+  static Future<http.Response> read(int id) async {
+    try {
+      var response = await http.get(Uri.http(url, "$endpoint/$id"));
+
+      if (response.statusCode != 200) {
+        throw Exception(response.reasonPhrase);
+      }
+
+      return response;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
   // static Future<Map<String, dynamic>> getProducts() async {
   //   try {
   //     var response = await get(Uri.http(url, endpoint));
@@ -46,7 +60,7 @@ class ProductClient {
 
   static Future<List<Product>> getAllProducts() async {
     try {
-      var response = await get(Uri.http(url, endpoint));
+      var response = await http.get(Uri.http(url, endpoint));
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -69,9 +83,9 @@ class ProductClient {
     }
   }
 
-  static Future<Response> getProductsBySlug(slug) async {
+  static Future<http.Response> getProductsBySlug(slug) async {
     try {
-      var response = await get(Uri.http(url, "$endpoint/q=$slug"));
+      var response = await http.get(Uri.http(url, "$endpoint/q=$slug"));
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
       // print(response.body);
@@ -81,9 +95,9 @@ class ProductClient {
     }
   }
 
-  static Future<Response> create(Product product) async {
+  static Future<http.Response> create(Product product) async {
     try {
-      var response = await post(Uri.http(url, endpoint),
+      var response = await http.post(Uri.http(url, endpoint),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(product));
 
@@ -95,9 +109,9 @@ class ProductClient {
     }
   }
 
-  static Future<Response> update(Product product) async {
+  static Future<http.Response> update(Product product) async {
     try {
-      var response = await put(Uri.http(url, "$endpoint/${product.id}"),
+      var response = await http.put(Uri.http(url, "$endpoint/${product.id}"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(product));
 
@@ -109,10 +123,10 @@ class ProductClient {
     }
   }
 
-  static Future<Response> destroy(id) async {
+  static Future<http.Response> destroy(id) async {
     try {
       print(Uri.http(url, "$endpoint/$id"));
-      var response = await delete(Uri.http(url, "$endpoint/$id"));
+      var response = await http.delete(Uri.http(url, "$endpoint/$id"));
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
       // print(response.body);

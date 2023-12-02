@@ -101,7 +101,7 @@ class _ProductActionsState extends State<ProductActions> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.id == null ? "Add" : "Update",
+                widget.id == null ? "Add" : "Read",
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),

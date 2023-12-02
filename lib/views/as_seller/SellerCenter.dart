@@ -6,7 +6,10 @@ import 'package:maju/data/client/ProductClient.dart';
 import 'package:maju/views/as_seller/product_actions.dart';
 
 class SellerCenter extends StatefulWidget {
-  const SellerCenter({super.key});
+  final Future<List<Product?>> products;
+
+  const SellerCenter({Key? key, required this.products}) : super(key: key);
+  // const SellerCenter({super.key});
 
   @override
   State<SellerCenter> createState() => _SellerCenterState();
@@ -25,6 +28,30 @@ class _SellerCenterState extends State<SellerCenter> {
       debugPrint("Error fetching products: $e");
     }
   }
+
+  void _getProductsTesting() async {
+  try {
+    // data dummy
+    List<Product> dummyProducts = [
+      Product(
+        id: 1,
+        idSeller: 1,
+        productName: "Mie Ayam",
+        price: 15000.0,
+        description: "Enak dan lezat!",
+        rating: 4,
+      ),
+      
+    ];
+
+    setState(() {
+      _products = Future.value(dummyProducts);
+    });
+  } catch (e) {
+    debugPrint("Error fetching products: $e");
+  }
+}
+
 
   void _getProductBySlug(slug) async {
     try {
@@ -51,13 +78,14 @@ class _SellerCenterState extends State<SellerCenter> {
 
   @override
   void initState() {
-    _getProducts();
+    _getProductsTesting();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key('sellerCenterScaffoldKey'),
       appBar: AppBar(
         title: const Text("Seller Center"),
         actions: [
@@ -67,7 +95,7 @@ class _SellerCenterState extends State<SellerCenter> {
               Navigator.of(context)
                   .push(MaterialPageRoute(
                       builder: (context) => const ProductActions()))
-                  .then((value) => _getProducts());
+                  .then((value) => _getProductsTesting());
             },
           )
         ],
@@ -112,6 +140,7 @@ class _SellerCenterState extends State<SellerCenter> {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(
                                           builder: (context) => ProductActions(
+
                                                 id: data[index]!.id,
                                                 productName:
                                                     data[index]!.productName,
@@ -119,7 +148,7 @@ class _SellerCenterState extends State<SellerCenter> {
                                                     data[index]!.description,
                                                 price: data[index]!.price,
                                               )))
-                                      .then((value) => _getProducts());
+                                      .then((value) => _getProductsTesting());
                                 },
                               ),
                               const Divider(

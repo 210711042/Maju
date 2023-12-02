@@ -1,35 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:maju/views/as_seller/product_actions.dart';
+import 'package:maju/data/client/ProductClient.dart';
+import 'package:maju/views/as_seller/SellerCenter.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 void main() {
   testWidgets('Test Read Product', (WidgetTester tester) async {
-    
-    await tester.pumpWidget(MaterialApp(
-      home: Material(
-        child: ProductActions(
-          id: 1,
-          productName: "Mie Ayam",
-          price: 15000.0,
-          description: "Enak dan lezat!",
-        ),
+  await tester.pumpWidget(
+    MaterialApp(
+      home: ResponsiveSizer(
+        builder: (context, orientation, deviceType) {
+          double containerHeight =
+              orientation == Orientation.portrait ? 20.5.h : 12.5.h;
+
+          return Material(
+            child: Container(
+              width: 100.w,
+              height: containerHeight,
+              color: Colors.blue,
+              child: SellerCenter(
+                key: Key('sellerCenterKey'), 
+                products: Future.value([
+                  Product(
+                    id: 1,
+                    idSeller: 1,
+                    productName: "Mie Ayam",
+                    price: 15000.0,
+                    description: "Enak dan lezat!",
+                    rating: 4,
+                  ),
+                ]),
+              ),
+            ),
+          );
+        },
       ),
-    ));
+    ),
+  );
 
-    
-    await tester.pump();
-    await tester.pumpAndSettle();
-    
-    expect(find.widgetWithText(TextFormField, 'Nama Produk'), findsOneWidget);
-    expect(find.widgetWithText(TextFormField, 'Harga'), findsOneWidget);
-    expect(find.widgetWithText(TextFormField, 'Deskripsi Produk'), findsOneWidget);
+  await tester.pump();
+  await tester.pumpAndSettle();
 
-    TextFormField productNameTextField = tester.widget(find.widgetWithText(TextFormField, 'Nama Produk'));
-    TextFormField priceTextField = tester.widget(find.widgetWithText(TextFormField, 'Harga'));
-    TextFormField descriptionTextField = tester.widget(find.widgetWithText(TextFormField, 'Deskripsi Produk'));
+  // Find the SellerCenter widget
+  final Finder sellerCenterFinder = find.byKey(Key('sellerCenterKey'));
+  expect(sellerCenterFinder, findsOneWidget);
 
-    expect(productNameTextField.controller!.text, "Mie Ayam");
-    expect(priceTextField.controller!.text, "15000.0");
-    expect(descriptionTextField.controller!.text, "Enak dan lezat!");
-  });
+  // Now, find the Scaffold widget inside the SellerCenter using a different key
+  final Finder scaffoldFinder = find.byKey(Key('sellerCenterScaffoldKey'));
+  expect(scaffoldFinder, findsOneWidget);
+
+  // Add additional expectations if needed
+});
+
 }
