@@ -47,6 +47,13 @@ Aplikasi E-commerce Maju (Marketmaju) berbentuk market place yang dapat membantu
 
 - Abraham: Integrasi API Login, Register, Profile
 
+## Features UGD 12 | Unit Testing
+- Natasya: read Product testing
+- Natalia: create Product testing
+- Gratia: update Product testing
+- Nicodemus: delete Product testing
+- Abraham: Testing Login dan Register
+
 ## Tech Stack
 
 **Client:** Flutter
